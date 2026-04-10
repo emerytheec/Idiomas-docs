@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" rx="12" fill="#1a1a2e"/>
+  <circle cx="32" cy="30" r="18" stroke="#00d4ff" stroke-width="2.5" fill="none"/>
+  <ellipse cx="32" cy="30" rx="8" ry="18" stroke="#00d4ff" stroke-width="1.5" fill="none"/>
+  <line x1="14" y1="30" x2="50" y2="30" stroke="#00d4ff" stroke-width="1.5"/>
+  <line x1="17" y1="21" x2="47" y2="21" stroke="#00d4ff" stroke-width="1" opacity="0.6"/>
+  <line x1="17" y1="39" x2="47" y2="39" stroke="#00d4ff" stroke-width="1" opacity="0.6"/>
+  <text x="32" y="57" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="10" font-weight="700" fill="#a78bfa">A</text>
+  <text x="22" y="57" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" font-weight="600" fill="#00d4ff" opacity="0.7">&#25991;</text>
+  <text x="42" y="57" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="9" font-weight="600" fill="#4ade80" opacity="0.7">&#12354;</text>
+</svg>

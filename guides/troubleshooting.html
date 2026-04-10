@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solucion de Problemas - Idiomas</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="../assets/images/logo.svg">
+</head>
+<body>
+
+<header class="header">
+  <a href="../index.html" class="header-logo">
+    <img src="../assets/images/logo.svg" alt="Idiomas"><span>Idiomas</span>
+  </a>
+  <span class="header-version">v1.0.25</span>
+  <nav class="header-nav">
+    <a href="https://github.com/emerytheec/Idiomas">GitHub</a>
+    <a href="https://emerytheec.github.io/vpm-listing/">VPM</a>
+    <a href="https://ko-fi.com/bender_dios">Ko-fi</a>
+  </nav>
+  <button class="menu-toggle">&#9776;</button>
+</header>
+
+<div class="sidebar-overlay"></div>
+
+<aside class="sidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-title">Inicio</div>
+    <a href="../index.html" class="sidebar-link"><span class="dot dot-cyan"></span> Introduccion</a>
+    <a href="../getting-started.html" class="sidebar-link"><span class="dot dot-green"></span> Primeros Pasos</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Componentes</div>
+    <a href="../components/localization-manager.html" class="sidebar-link"><span class="dot dot-cyan"></span> LocalizationManager</a>
+    <a href="../components/canvas-localizer.html" class="sidebar-link"><span class="dot dot-green"></span> CanvasLocalizer</a>
+    <a href="../components/text-localizer.html" class="sidebar-link"><span class="dot dot-green"></span> TextLocalizer</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Guias</div>
+    <a href="./automatic-workflow.html" class="sidebar-link"><span class="dot dot-purple"></span> Flujo Automatico</a>
+    <a href="./detailed-workflow.html" class="sidebar-link"><span class="dot dot-purple"></span> Flujo Detallado</a>
+    <a href="./auto-translate.html" class="sidebar-link"><span class="dot dot-purple"></span> Auto-Traduccion</a>
+    <a href="./csv-export-import.html" class="sidebar-link"><span class="dot dot-purple"></span> Exportar / Importar CSV</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Referencia</div>
+    <a href="../api/runtime-api.html" class="sidebar-link"><span class="dot dot-blue"></span> API Runtime</a>
+    <a href="./best-practices.html" class="sidebar-link"><span class="dot dot-blue"></span> Buenas Practicas</a>
+    <a href="./troubleshooting.html" class="sidebar-link"><span class="dot dot-red"></span> Solucion de Problemas</a>
+  </div>
+</aside>
+
+<main class="main">
+
+  <span class="component-badge badge-guide">Guia</span>
+  <h1>Solucion de Problemas</h1>
+  <p class="page-subtitle">Soluciones a problemas comunes con el sistema de localizacion</p>
+
+  <h2>Caracteres CJK se ven como cuadrados</h2>
+  <p><strong>Problema:</strong> Los caracteres japoneses, coreanos o chinos aparecen como <code>□</code> en el editor de Unity.</p>
+  <p><strong>Solucion:</strong></p>
+  <ul>
+    <li>Esto es <strong>completamente normal</strong> en el editor de Unity</li>
+    <li>En VRChat se renderizan correctamente (Noto Sans CJK integrado en el cliente)</li>
+    <li><strong>No intentes solucionarlo</strong> añadiendo fuentes personalizadas &mdash; eso puede empeorar las cosas</li>
+    <li>Si necesitas verificar los caracteres en el editor, puedes instalar temporalmente una fuente CJK en TMP, pero recuerda <strong>quitarla antes de hacer build</strong></li>
+  </ul>
+
+  <div class="info-box danger">
+    <span class="icon">&#9888;</span>
+    <span>Nunca pongas fuentes en <code>TMP Settings &gt; Fallback Font Assets</code>. Eso impide que VRChat use sus fuentes internas.</span>
+  </div>
+
+  <h2>El dropdown no cambia el idioma</h2>
+  <p><strong>Problema:</strong> Al seleccionar un idioma en el dropdown no pasa nada.</p>
+  <p><strong>Soluciones:</strong></p>
+  <ol>
+    <li>Verifica que el <code>TMP_Dropdown</code> esta asignado en el campo correspondiente del LocalizationManager</li>
+    <li>Verifica que el array de codigos de idioma tiene el <strong>mismo numero de elementos</strong> que las opciones del dropdown</li>
+    <li>Verifica que el <strong>orden de los codigos</strong> coincide con las opciones (posicion 0 = primera opcion)</li>
+    <li>Asegurate de que el evento <code>OnValueChanged</code> del dropdown esta conectado al metodo <code>OnLanguageDropdownChanged</code> del LocalizationManager</li>
+  </ol>
+
+  <h2>Las traducciones no se aplican</h2>
+  <p><strong>Problema:</strong> Los textos no cambian al cambiar de idioma.</p>
+  <p><strong>Soluciones:</strong></p>
+  <ol>
+    <li>Verifica que el CanvasLocalizer/TextLocalizer tiene <strong>referencia al LocalizationManager</strong></li>
+    <li>Verifica que los arrays <code>tmpTexts</code>/<code>tmpKeys</code> no estan vacios (re-escanea si es necesario)</li>
+    <li>Verifica que las <strong>claves en el componente coinciden</strong> con las claves en el JSON</li>
+    <li>Pulsa <strong>"Exportar al JSON y Aplicar"</strong> en el CanvasLocalizer para re-registrar el componente</li>
+    <li>Verifica que el archivo JSON esta asignado en el LocalizationManager</li>
+  </ol>
+
+  <h2>MyMemory no traduce / da error</h2>
+  <p><strong>Problema:</strong> La auto-traduccion falla o devuelve errores.</p>
+  <p><strong>Soluciones:</strong></p>
+  <ul>
+    <li>Verifica tu <strong>conexion a internet</strong></li>
+    <li>Has alcanzado el <strong>limite de 5000 caracteres diarios</strong> &mdash; espera 24 horas</li>
+    <li>Lingva deberia activarse automaticamente como <strong>respaldo</strong></li>
+    <li>Si ambas APIs fallan, los textos se marcan con <code>[TODO:xx]</code> &mdash; traduce manualmente</li>
+    <li>Exporta a CSV y usa Google Translate manualmente como <strong>alternativa</strong></li>
+  </ul>
+
+  <h2>Claves duplicadas</h2>
+  <p><strong>Problema:</strong> Al escanear un Canvas aparecen claves marcadas en amarillo (duplicadas).</p>
+  <p><strong>Solucion:</strong></p>
+  <ul>
+    <li>Dos textos en la misma ruta de jerarquia generan la misma clave</li>
+    <li>Edita manualmente una de las claves para hacerla unica</li>
+    <li>Ejemplo: <code>"panel_btn_text"</code> &rarr; <code>"panel_btn_text_confirm"</code> y <code>"panel_btn_text_cancel"</code></li>
+  </ul>
+
+  <h2>El idioma no se detecta correctamente</h2>
+  <p><strong>Problema:</strong> Los jugadores ven el idioma incorrecto al entrar al mundo.</p>
+  <p><strong>Solucion:</strong></p>
+  <ul>
+    <li>La deteccion usa la cascada: <strong>VRChat API &rarr; variantes &rarr; zona horaria &rarr; fallback</strong></li>
+    <li>Si un jugador tiene VRChat en un idioma no soportado, vera el <strong>idioma fallback</strong></li>
+    <li>Catalan (<code>ca</code>) no tiene zona horaria dedicada &mdash; los jugadores tendran que seleccionarlo <strong>manualmente</strong></li>
+    <li>Verifica que el idioma fallback es el mas adecuado para tu audiencia principal</li>
+    <li>Los jugadores siempre pueden cambiar idioma con el <strong>dropdown</strong></li>
+  </ul>
+
+  <h2>Textos dinamicos no actualizan</h2>
+  <p><strong>Problema:</strong> TextLocalizer con parametros <code>{0}</code>, <code>{1}</code> no muestra los valores.</p>
+  <p><strong>Soluciones:</strong></p>
+  <ol>
+    <li>Asegurate de llamar <code>SetParams()</code> / <code>SetParams2()</code> / <code>SetParams3()</code> <strong>despues</strong> de que el manager este inicializado</li>
+    <li>Verifica que el JSON tiene los placeholders <code>{0}</code>, <code>{1}</code> en la traduccion</li>
+    <li>Si usas <code>richTextFormat</code>, usa <code>{t}</code> en vez de <code>{0}</code> para evitar conflictos con parametros</li>
+  </ol>
+
+  <h2>Error al importar CSV</h2>
+  <p><strong>Problema:</strong> La importacion de CSV falla o corrompe datos.</p>
+  <p><strong>Soluciones:</strong></p>
+  <ul>
+    <li>Asegurate de que el CSV usa <strong>comas</strong> como separador (no punto y coma)</li>
+    <li>Si hay comas en los textos, deben estar entre <strong>comillas dobles</strong></li>
+    <li>Verifica que la primera fila tiene los codigos de idioma correctos</li>
+    <li>Verifica que la primera columna tiene las claves sin modificar</li>
+    <li>Codificacion: el CSV debe estar en <strong>UTF-8</strong></li>
+  </ul>
+
+  <h2>Zona horaria en Quest</h2>
+  <p><strong>Problema:</strong> La deteccion de idioma por zona horaria no funciona en Quest.</p>
+  <p><strong>Solucion:</strong></p>
+  <ul>
+    <li>Quest usa formato IANA (<code>Asia/Tokyo</code>), no Windows (<code>Tokyo Standard Time</code>)</li>
+    <li>El sistema soporta <strong>ambos formatos</strong> automaticamente</li>
+    <li>Si aun asi no funciona, el fallback se activa automaticamente</li>
+    <li>Los jugadores siempre pueden cambiar idioma manualmente con el dropdown</li>
+  </ul>
+
+  <h2>El JSON no se crea automaticamente</h2>
+  <p><strong>Problema:</strong> Al usar la Configuracion Rapida no se crea el archivo JSON.</p>
+  <p><strong>Solucion:</strong></p>
+  <ul>
+    <li>Verifica que la carpeta <code>Assets/Idiomas_Data/</code> existe (se crea automaticamente)</li>
+    <li>Verifica que no hay errores de compilacion en la consola de Unity</li>
+    <li>Intenta crear el archivo manualmente: crea un archivo <code>translation.json</code> con contenido <code>{}</code> y asignalo en el inspector</li>
+  </ul>
+
+  <div class="page-nav">
+    <a href="./best-practices.html" class="prev">
+      <div class="nav-label">Anterior</div>
+      <div class="nav-title">Buenas Practicas</div>
+    </a>
+    <a href="../api/runtime-api.html" class="next">
+      <div class="nav-label">Siguiente</div>
+      <div class="nav-title">API Runtime</div>
+    </a>
+  </div>
+
+  <footer class="footer">
+    <span>Idiomas &copy; 2025-2026 Bender_Dios</span>
+    <a href="https://github.com/emerytheec/Idiomas">GitHub</a>
+    <a href="https://ko-fi.com/bender_dios">Ko-fi</a>
+  </footer>
+</main>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

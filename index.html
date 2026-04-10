@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentacion - Idiomas</title>
+  <link rel="stylesheet" href="./assets/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="./assets/images/logo.svg">
+</head>
+<body>
+
+<header class="header">
+  <a href="./index.html" class="header-logo">
+    <img src="./assets/images/logo.svg" alt="Idiomas"><span>Idiomas</span>
+  </a>
+  <span class="header-version">v1.0.25</span>
+  <nav class="header-nav">
+    <a href="https://github.com/emerytheec/Idiomas">GitHub</a>
+    <a href="https://emerytheec.github.io/vpm-listing/">VPM</a>
+    <a href="https://ko-fi.com/bender_dios">Ko-fi</a>
+  </nav>
+  <button class="menu-toggle">&#9776;</button>
+</header>
+
+<div class="sidebar-overlay"></div>
+
+<aside class="sidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-title">Inicio</div>
+    <a href="./index.html" class="sidebar-link"><span class="dot dot-cyan"></span> Introduccion</a>
+    <a href="./getting-started.html" class="sidebar-link"><span class="dot dot-green"></span> Primeros Pasos</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Componentes</div>
+    <a href="./components/localization-manager.html" class="sidebar-link"><span class="dot dot-cyan"></span> LocalizationManager</a>
+    <a href="./components/canvas-localizer.html" class="sidebar-link"><span class="dot dot-green"></span> CanvasLocalizer</a>
+    <a href="./components/text-localizer.html" class="sidebar-link"><span class="dot dot-green"></span> TextLocalizer</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Guias</div>
+    <a href="./guides/automatic-workflow.html" class="sidebar-link"><span class="dot dot-purple"></span> Flujo Automatico</a>
+    <a href="./guides/detailed-workflow.html" class="sidebar-link"><span class="dot dot-purple"></span> Flujo Detallado</a>
+    <a href="./guides/auto-translate.html" class="sidebar-link"><span class="dot dot-purple"></span> Auto-Traduccion</a>
+    <a href="./guides/csv-export-import.html" class="sidebar-link"><span class="dot dot-purple"></span> Exportar / Importar CSV</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Referencia</div>
+    <a href="./api/runtime-api.html" class="sidebar-link"><span class="dot dot-blue"></span> API Runtime</a>
+    <a href="./guides/best-practices.html" class="sidebar-link"><span class="dot dot-blue"></span> Buenas Practicas</a>
+    <a href="./guides/troubleshooting.html" class="sidebar-link"><span class="dot dot-red"></span> Solucion de Problemas</a>
+  </div>
+</aside>
+
+<main class="main">
+
+  <h1>Idiomas</h1>
+  <p class="page-subtitle">Sistema de localizacion automatica para mundos de VRChat</p>
+
+  <p>
+    <strong>Idiomas</strong> es un sistema de localizacion para mundos de VRChat que traduce la interfaz de usuario (Canvas) a <strong>11 idiomas</strong> de forma automatica. Detecta el idioma del jugador, traduce los textos y permite cambiar de idioma en tiempo real con un dropdown.
+  </p>
+  <p>
+    Incluye herramientas de editor para escanear tu escena, generar claves de traduccion, y traducir automaticamente usando APIs gratuitas (<strong>MyMemory</strong> y <strong>Lingva</strong>) sin necesidad de registro ni pago. Tambien puedes exportar a CSV para trabajar con traductores humanos.
+  </p>
+  <p>
+    Funciona con <strong>UdonSharp</strong> y <code>BehaviourSyncMode.Manual</code>. Diseñado para que localizar tu mundo sea tan facil como escanear, hacer clic, y traducir.
+  </p>
+
+  <h2>Que puedes hacer con Idiomas?</h2>
+  <ul>
+    <li><strong>Traduccion automatica de Canvas</strong> &mdash; escanea tus Canvas y traduce todos los textos a 11 idiomas con unos pocos clics</li>
+    <li><strong>Deteccion automatica de idioma</strong> &mdash; detecta el idioma del jugador via API de VRChat, zona horaria del sistema, o idioma fallback</li>
+    <li><strong>Auto-traduccion con APIs gratuitas</strong> &mdash; usa MyMemory y Lingva para traducir sin registro ni pago (5000 caracteres/dia)</li>
+    <li><strong>11 idiomas soportados</strong> &mdash; ingles, español, japones, coreano, chino simplificado, chino tradicional, ruso, portugues, frances, aleman y catalan</li>
+    <li><strong>Fuentes CJK integradas</strong> &mdash; japones, coreano y chino funcionan sin fuentes adicionales gracias a Noto Sans de VRChat</li>
+    <li><strong>Exportar / Importar CSV</strong> &mdash; comparte traducciones con traductores humanos via Google Sheets o Excel</li>
+    <li><strong>Textos dinamicos</strong> &mdash; parametros <code>{0}</code>, <code>{1}</code>, <code>{2}</code>, prefijos, sufijos y formato rich text</li>
+    <li><strong>Pluralizacion</strong> &mdash; soporte para variantes <code>_zero</code>, <code>_one</code>, <code>_other</code></li>
+    <li><strong>Editor multiidioma</strong> &mdash; toda la interfaz del editor esta traducida a los 11 idiomas</li>
+    <li><strong>Selector de idioma</strong> &mdash; prefab con dropdown TMP listo para usar en tu mundo</li>
+  </ul>
+
+  <h2>Componentes del Sistema</h2>
+
+  <h3>Componentes Runtime</h3>
+  <div class="component-grid">
+    <a href="./components/localization-manager.html" class="component-card">
+      <div class="cc-name">LocalizationManager</div>
+      <div class="cc-desc">Componente central que gestiona las traducciones, detecta el idioma y notifica a todos los localizadores.</div>
+    </a>
+    <a href="./components/canvas-localizer.html" class="component-card">
+      <div class="cc-name">CanvasLocalizer</div>
+      <div class="cc-desc">Localiza todos los textos de un Canvas completo con un solo componente.</div>
+    </a>
+    <a href="./components/text-localizer.html" class="component-card">
+      <div class="cc-name">TextLocalizer</div>
+      <div class="cc-desc">Localiza un texto individual con parametros dinamicos, prefijos y rich text.</div>
+    </a>
+  </div>
+
+  <h3>Herramientas del Editor</h3>
+  <div class="component-grid">
+    <a href="./guides/auto-translate.html" class="component-card">
+      <div class="cc-name">Auto-Traduccion</div>
+      <div class="cc-desc">Ventana para traducir automaticamente textos faltantes usando MyMemory y Lingva.</div>
+    </a>
+    <a href="./guides/csv-export-import.html" class="component-card">
+      <div class="cc-name">CSV Export / Import</div>
+      <div class="cc-desc">Exporta e importa traducciones en formato CSV para colaborar con traductores humanos.</div>
+    </a>
+  </div>
+
+  <div class="info-box tip">
+    <span class="icon">&#9432;</span>
+    <span>Si es tu primera vez con Idiomas, visita la guia de <a href="./getting-started.html">Primeros Pasos</a> para instalarlo y localizar tu primer Canvas en minutos.</span>
+  </div>
+
+  <div class="page-nav">
+    <a href="./getting-started.html" class="next">
+      <div class="nav-label">Siguiente</div>
+      <div class="nav-title">Primeros Pasos</div>
+    </a>
+  </div>
+
+  <footer class="footer">
+    <span>Idiomas &copy; 2025-2026 Bender_Dios</span>
+    <a href="https://github.com/emerytheec/Idiomas">GitHub</a>
+    <a href="https://ko-fi.com/bender_dios">Ko-fi</a>
+  </footer>
+</main>
+
+<script src="./assets/js/main.js"></script>
+</body>
+</html>

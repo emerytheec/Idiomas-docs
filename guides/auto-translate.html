@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto-Traduccion - Idiomas</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="../assets/images/logo.svg">
+</head>
+<body>
+
+<header class="header">
+  <a href="../index.html" class="header-logo">
+    <img src="../assets/images/logo.svg" alt="Idiomas"><span>Idiomas</span>
+  </a>
+  <span class="header-version">v1.0.25</span>
+  <nav class="header-nav">
+    <a href="https://github.com/emerytheec/Idiomas">GitHub</a>
+    <a href="https://emerytheec.github.io/vpm-listing/">VPM</a>
+    <a href="https://ko-fi.com/bender_dios">Ko-fi</a>
+  </nav>
+  <button class="menu-toggle">&#9776;</button>
+</header>
+
+<div class="sidebar-overlay"></div>
+
+<aside class="sidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-title">Inicio</div>
+    <a href="../index.html" class="sidebar-link"><span class="dot dot-cyan"></span> Introduccion</a>
+    <a href="../getting-started.html" class="sidebar-link"><span class="dot dot-green"></span> Primeros Pasos</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Componentes</div>
+    <a href="../components/localization-manager.html" class="sidebar-link"><span class="dot dot-cyan"></span> LocalizationManager</a>
+    <a href="../components/canvas-localizer.html" class="sidebar-link"><span class="dot dot-green"></span> CanvasLocalizer</a>
+    <a href="../components/text-localizer.html" class="sidebar-link"><span class="dot dot-green"></span> TextLocalizer</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Guias</div>
+    <a href="./automatic-workflow.html" class="sidebar-link"><span class="dot dot-purple"></span> Flujo Automatico</a>
+    <a href="./detailed-workflow.html" class="sidebar-link"><span class="dot dot-purple"></span> Flujo Detallado</a>
+    <a href="./auto-translate.html" class="sidebar-link"><span class="dot dot-purple"></span> Auto-Traduccion</a>
+    <a href="./csv-export-import.html" class="sidebar-link"><span class="dot dot-purple"></span> Exportar / Importar CSV</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Referencia</div>
+    <a href="../api/runtime-api.html" class="sidebar-link"><span class="dot dot-blue"></span> API Runtime</a>
+    <a href="./best-practices.html" class="sidebar-link"><span class="dot dot-blue"></span> Buenas Practicas</a>
+    <a href="./troubleshooting.html" class="sidebar-link"><span class="dot dot-red"></span> Solucion de Problemas</a>
+  </div>
+</aside>
+
+<main class="main">
+
+  <span class="component-badge badge-guide">Guia</span>
+  <h1>Auto-Traduccion</h1>
+  <p class="page-subtitle">Traduce automaticamente tus textos usando APIs gratuitas sin registro</p>
+
+  <h2>Descripcion</h2>
+  <p>
+    La ventana de Auto-Traduccion permite traducir automaticamente todos los textos faltantes en tu archivo JSON usando APIs gratuitas. <strong>No necesitas registrarte ni pagar</strong> &mdash; todo funciona de forma anonima.
+  </p>
+
+  <h2>APIs disponibles</h2>
+
+  <h3>MyMemory (principal)</h3>
+  <ul>
+    <li><strong>Endpoint:</strong> <code>api.mymemory.translated.net</code></li>
+    <li><strong>Limite:</strong> 5000 caracteres por dia (uso anonimo)</li>
+    <li><strong>Registro:</strong> no necesario</li>
+    <li><strong>Calidad:</strong> buena para textos cortos de UI</li>
+    <li><strong>Idiomas:</strong> soporta los 11 idiomas del sistema</li>
+  </ul>
+
+  <h3>Lingva (respaldo)</h3>
+  <ul>
+    <li>Se usa <strong>automaticamente</strong> cuando MyMemory falla o alcanza su limite</li>
+    <li>Tambien gratuita y sin registro</li>
+    <li>Basada en Google Translate via proxy open-source</li>
+  </ul>
+
+  <div class="info-box tip">
+    <span class="icon">&#9432;</span>
+    <span>5000 caracteres al dia suelen ser suficientes para mundos medianos. Si necesitas mas, puedes dividir la traduccion en varios dias o usar la <a href="./csv-export-import.html">exportacion CSV</a> para traducir manualmente.</span>
+  </div>
+
+  <h2>Paso 1: Abrir la ventana</h2>
+  <p>
+    Desde el inspector del LocalizationManager, pulsa <strong>"Auto-Traducir Idiomas Faltantes"</strong>. Tambien puedes abrirla desde el menu <strong>Tools &gt; Idiomas &gt; Auto-Traducir</strong>.
+  </p>
+
+  <div class="screenshot-annotated">
+    <img src="../assets/images/screenshots/at-language-setup.png" alt="Ventana de Auto-Traduccion">
+    <span class="marker" style="top: 7%; left: 50%;">1</span>
+    <span class="marker" style="top: 15%; left: 50%;">2</span>
+    <span class="marker" style="top: 23%; left: 50%;">3</span>
+    <span class="marker" style="top: 38%; left: 20%;">4</span>
+    <span class="marker" style="top: 55%; left: 50%;">5</span>
+    <span class="marker" style="top: 80%; left: 50%;">6</span>
+    <span class="marker" style="top: 90%; left: 50%;">7</span>
+  </div>
+
+  <div class="annotation-list">
+    <span class="annotation-number">1</span>
+    <span class="annotation-text"><strong>APIs disponibles</strong> &mdash; muestra las APIs que se usaran: MyMemory (principal) y Lingva (respaldo). Ambas gratuitas y sin registro.</span>
+    <span class="annotation-number">2</span>
+    <span class="annotation-text"><strong>Archivo JSON</strong> &mdash; el archivo de traduccion que se esta usando.</span>
+    <span class="annotation-number">3</span>
+    <span class="annotation-text"><strong>Estado del JSON</strong> &mdash; claves totales y cuantas estan distribuidas por idioma.</span>
+    <span class="annotation-number">4</span>
+    <span class="annotation-text"><strong>Idiomas a completar</strong> &mdash; checkboxes para seleccionar los idiomas destino. Muestra cuantas claves faltan por idioma (ej: "nuevo, 36 por traducir").</span>
+    <span class="annotation-number">5</span>
+    <span class="annotation-text"><strong>Total a traducir</strong> &mdash; resumen del numero total de textos que se traduciran.</span>
+    <span class="annotation-number">6</span>
+    <span class="annotation-text"><strong>Boton "Traducir X textos con MyMemory"</strong> &mdash; inicia la traduccion automatica.</span>
+    <span class="annotation-number">7</span>
+    <span class="annotation-text"><strong>Estado del JSON</strong> &mdash; informacion sobre el archivo cargado (claves totales, idiomas).</span>
+  </div>
+
+  <h2>Paso 2: Seleccionar idiomas</h2>
+  <p>
+    Marca los idiomas a los que quieres traducir. El sistema muestra cuantas claves faltan por idioma (ej: <code>"nuevo, 36 por traducir"</code>).
+  </p>
+  <p>
+    Cada clave se traduce <strong>desde el idioma que tiene texto disponible</strong>. El sistema busca la fuente en este orden de prioridad:
+  </p>
+  <ol>
+    <li><strong>Ingles (en)</strong> &mdash; si la clave tiene traduccion en ingles, se usa como fuente</li>
+    <li><strong>Español (es)</strong> &mdash; si no hay ingles, usa español</li>
+    <li><strong>Cualquier otro idioma</strong> disponible en el JSON</li>
+  </ol>
+
+  <h2>Paso 3: Traducir</h2>
+  <p>
+    Pulsa el boton <strong>"Traducir X textos con MyMemory"</strong>. Aparece una barra de progreso mientras se procesan las traducciones una por una.
+  </p>
+
+  <h2>Paso 4: Revisar resultados</h2>
+
+  <div class="screenshot-annotated">
+    <img src="../assets/images/screenshots/at-translation-results.png" alt="Resultados de la traduccion">
+    <span class="marker" style="top: 10%; left: 50%;">1</span>
+    <span class="marker" style="top: 35%; left: 50%;">2</span>
+    <span class="marker" style="top: 65%; left: 50%;">3</span>
+    <span class="marker" style="top: 85%; left: 50%;">4</span>
+    <span class="marker" style="top: 95%; left: 50%;">5</span>
+  </div>
+
+  <div class="annotation-list">
+    <span class="annotation-number">1</span>
+    <span class="annotation-text"><strong>Resumen</strong> &mdash; muestra cuantas traducciones se completaron exitosamente.</span>
+    <span class="annotation-number">2</span>
+    <span class="annotation-text"><strong>Vista previa</strong> &mdash; lista de todas las traducciones realizadas con idioma origen, destino y resultado.</span>
+    <span class="annotation-number">3</span>
+    <span class="annotation-text"><strong>Traducciones con errores</strong> &mdash; textos que no pudieron traducirse aparecen marcados con <code>[TODO:xx]</code> donde xx es el codigo del idioma.</span>
+    <span class="annotation-number">4</span>
+    <span class="annotation-text"><strong>Guardar al JSON</strong> &mdash; guarda todas las traducciones al archivo.</span>
+    <span class="annotation-number">5</span>
+    <span class="annotation-text"><strong>Estado final</strong> &mdash; confirmacion de que el JSON fue actualizado correctamente.</span>
+  </div>
+
+  <h2>Paso 5: Guardar</h2>
+  <p>
+    Pulsa <strong>"Guardar al JSON"</strong>. Las traducciones se guardan inmediatamente y ya estan disponibles en Play Mode.
+  </p>
+
+  <h2>Proteccion de Rich Text</h2>
+  <p>El sistema protege automaticamente las etiquetas de rich text durante la traduccion:</p>
+  <ul>
+    <li>Tags como <code>&lt;color=#FF0000&gt;</code>, <code>&lt;b&gt;</code>, <code>&lt;i&gt;</code>, <code>&lt;size=20&gt;</code> <strong>no se envian a la API</strong></li>
+    <li>Solo se traduce el texto visible, no las etiquetas</li>
+    <li>Despues de traducir, las etiquetas se recolocan en su posicion original</li>
+  </ul>
+
+  <h2>Traducciones que fallan</h2>
+  <p>
+    Si una traduccion falla (API no disponible, limite alcanzado, idioma no soportado), el texto se marca con el prefijo <code>[TODO:xx]</code>. Estos textos necesitan traduccion manual:
+  </p>
+  <ol>
+    <li>Abre el archivo JSON con cualquier editor de texto</li>
+    <li>Busca <code>"[TODO:"</code> para encontrar las traducciones pendientes</li>
+    <li>Reemplaza el texto con la traduccion correcta</li>
+    <li>Guarda el archivo</li>
+  </ol>
+
+  <h2>Consejos</h2>
+  <ul>
+    <li>Traduce primero los idiomas mas importantes para tu audiencia</li>
+    <li>Si alcanzas el limite diario de MyMemory, espera 24 horas o usa la <a href="./csv-export-import.html">exportacion CSV</a></li>
+    <li>Revisa siempre las traducciones automaticas, especialmente para japones y coreano que pueden tener matices culturales</li>
+    <li>Los textos muy cortos (1-2 palabras) suelen traducirse bien; los textos largos pueden necesitar ajustes</li>
+    <li>Si un texto tiene rich text complejo, verifica que las etiquetas quedaron intactas despues de la traduccion</li>
+  </ul>
+
+  <div class="page-nav">
+    <a href="./detailed-workflow.html" class="prev">
+      <div class="nav-label">Anterior</div>
+      <div class="nav-title">Flujo Detallado</div>
+    </a>
+    <a href="./csv-export-import.html" class="next">
+      <div class="nav-label">Siguiente</div>
+      <div class="nav-title">Exportar / Importar CSV</div>
+    </a>
+  </div>
+
+  <footer class="footer">
+    <span>Idiomas &copy; 2025-2026 Bender_Dios</span>
+    <a href="https://github.com/emerytheec/Idiomas">GitHub</a>
+    <a href="https://ko-fi.com/bender_dios">Ko-fi</a>
+  </footer>
+</main>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

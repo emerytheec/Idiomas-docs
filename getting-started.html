@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Primeros Pasos - Idiomas</title>
+  <link rel="stylesheet" href="./assets/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="./assets/images/logo.svg">
+</head>
+<body>
+
+<header class="header">
+  <a href="./index.html" class="header-logo">
+    <img src="./assets/images/logo.svg" alt="Idiomas"><span>Idiomas</span>
+  </a>
+  <span class="header-version">v1.0.25</span>
+  <nav class="header-nav">
+    <a href="https://github.com/emerytheec/Idiomas">GitHub</a>
+    <a href="https://emerytheec.github.io/vpm-listing/">VPM</a>
+    <a href="https://ko-fi.com/bender_dios">Ko-fi</a>
+  </nav>
+  <button class="menu-toggle">&#9776;</button>
+</header>
+
+<div class="sidebar-overlay"></div>
+
+<aside class="sidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-title">Inicio</div>
+    <a href="./index.html" class="sidebar-link"><span class="dot dot-cyan"></span> Introduccion</a>
+    <a href="./getting-started.html" class="sidebar-link"><span class="dot dot-green"></span> Primeros Pasos</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Componentes</div>
+    <a href="./components/localization-manager.html" class="sidebar-link"><span class="dot dot-cyan"></span> LocalizationManager</a>
+    <a href="./components/canvas-localizer.html" class="sidebar-link"><span class="dot dot-green"></span> CanvasLocalizer</a>
+    <a href="./components/text-localizer.html" class="sidebar-link"><span class="dot dot-green"></span> TextLocalizer</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Guias</div>
+    <a href="./guides/automatic-workflow.html" class="sidebar-link"><span class="dot dot-purple"></span> Flujo Automatico</a>
+    <a href="./guides/detailed-workflow.html" class="sidebar-link"><span class="dot dot-purple"></span> Flujo Detallado</a>
+    <a href="./guides/auto-translate.html" class="sidebar-link"><span class="dot dot-purple"></span> Auto-Traduccion</a>
+    <a href="./guides/csv-export-import.html" class="sidebar-link"><span class="dot dot-purple"></span> Exportar / Importar CSV</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Referencia</div>
+    <a href="./api/runtime-api.html" class="sidebar-link"><span class="dot dot-blue"></span> API Runtime</a>
+    <a href="./guides/best-practices.html" class="sidebar-link"><span class="dot dot-blue"></span> Buenas Practicas</a>
+    <a href="./guides/troubleshooting.html" class="sidebar-link"><span class="dot dot-red"></span> Solucion de Problemas</a>
+  </div>
+</aside>
+
+<main class="main">
+
+  <h1>Primeros Pasos</h1>
+  <p class="page-subtitle">Instala Idiomas y localiza tu primer Canvas en minutos</p>
+
+  <h2>Requisitos</h2>
+  <ul>
+    <li><strong>Unity 2022.3</strong> o superior</li>
+    <li><strong>VRChat SDK Worlds</strong> >= 3.8.1</li>
+    <li><strong>UdonSharp</strong> (incluido en el SDK de VRChat)</li>
+    <li><strong>TextMeshPro</strong> (incluido en Unity)</li>
+  </ul>
+
+  <h2>Instalacion</h2>
+
+  <h3>Opcion 1: VRChat Creator Companion (recomendado)</h3>
+  <ol class="steps">
+    <li>Abre <strong>VRChat Creator Companion</strong></li>
+    <li>Ve a <strong>Settings &gt; Packages &gt; Add Repository</strong></li>
+    <li>Añade la URL del repositorio VPM:
+      <pre><code>https://emerytheec.github.io/vpm-listing/index.json</code></pre>
+    </li>
+    <li>En tu proyecto, ve a <strong>Manage Project</strong>, busca <strong>"Idiomas"</strong> e instala el paquete</li>
+  </ol>
+
+  <h3>Opcion 2: Instalacion manual</h3>
+  <ol class="steps">
+    <li>Descarga el <code>.unitypackage</code> desde la pagina de <a href="https://github.com/emerytheec/Idiomas/releases">Releases en GitHub</a></li>
+    <li>En Unity: <strong>Assets &gt; Import Package &gt; Custom Package</strong></li>
+    <li>Selecciona el archivo descargado e importa todo</li>
+  </ol>
+
+  <div class="info-box tip">
+    <span class="icon">&#9432;</span>
+    <span>Si usas Creator Companion, las actualizaciones se gestionan automaticamente. Con la instalacion manual, tendras que descargar e importar cada nueva version.</span>
+  </div>
+
+  <h2>Tu primer Canvas localizado</h2>
+  <p>Sigue estos 6 pasos para localizar tu primer Canvas:</p>
+
+  <ol class="steps">
+    <li><strong>Arrastra el prefab</strong> <code>LocalizationManager</code> a tu escena. Lo encuentras en <code>Packages/Idiomas/Prefabs/LocalizationManager.prefab</code>. Este prefab incluye un dropdown de seleccion de idioma ya configurado.</li>
+    <li><strong>Selecciona el LocalizationManager</strong> en la jerarquia. En el inspector veras la configuracion principal del sistema.</li>
+    <li><strong>Elige tu idioma fallback</strong> &mdash; el idioma por defecto cuando no se puede detectar el idioma del jugador. Usa el idioma en el que estan escritos la mayoria de tus Canvas (normalmente ingles o español).</li>
+    <li><strong>Pulsa "Escanear Escena"</strong> para detectar todos los Canvas de tu mundo. Veras una lista con todos los Canvas encontrados y cuantos textos tiene cada uno.</li>
+    <li><strong>Selecciona el idioma base</strong> (el idioma actual de tus textos) y pulsa <strong>"Configuracion Rapida: Localizar Todo"</strong>. El sistema escanea cada Canvas, detecta los textos, genera claves de traduccion y crea el archivo JSON automaticamente.</li>
+    <li><strong>Traduce:</strong> Ve a la seccion "Traduccion" y pulsa <strong>"Auto-Traducir Idiomas Faltantes"</strong>. Selecciona los idiomas que quieras, pulsa traducir, y cuando termine pulsa "Guardar al JSON". Entra en Play Mode y prueba cambiando el idioma con el dropdown.</li>
+  </ol>
+
+  <div class="info-box warning">
+    <span class="icon">&#9888;</span>
+    <span>El archivo de traduccion se crea automaticamente en el primer escaneo. No necesitas crear ningun archivo manualmente.</span>
+  </div>
+
+  <h2>Dos modos de trabajo</h2>
+
+  <h3>Modo Automatico (recomendado)</h3>
+  <p>
+    Ideal cuando casi todos tus Canvas estan en el mismo idioma base. Con un solo clic en "Configuracion Rapida" el sistema escanea, detecta y configura todo automaticamente. Es el flujo que acabas de seguir en los pasos anteriores.
+  </p>
+  <p>Ver guia completa del <a href="./guides/automatic-workflow.html">Flujo Automatico</a></p>
+
+  <h3>Modo Detallado</h3>
+  <p>
+    Ideal cuando tus Canvas tienen textos en idiomas base diferentes, o cuando quieres controlar exactamente que textos se traducen y desde que idioma. Trabajas Canvas por Canvas, revisando y ajustando cada texto individualmente.
+  </p>
+  <p>Ver guia completa del <a href="./guides/detailed-workflow.html">Flujo Detallado</a></p>
+
+  <h2>Siguiente paso</h2>
+  <div class="info-box info">
+    <span class="icon">&#10132;</span>
+    <span>Continua con la documentacion del <a href="./components/localization-manager.html">LocalizationManager</a> para entender todas las opciones disponibles, o ve directamente al <a href="./guides/automatic-workflow.html">Flujo Automatico</a> para una guia paso a paso mas detallada.</span>
+  </div>
+
+  <div class="page-nav">
+    <a href="./index.html" class="prev">
+      <div class="nav-label">Anterior</div>
+      <div class="nav-title">Introduccion</div>
+    </a>
+    <a href="./components/localization-manager.html" class="next">
+      <div class="nav-label">Siguiente</div>
+      <div class="nav-title">LocalizationManager</div>
+    </a>
+  </div>
+
+  <footer class="footer">
+    <span>Idiomas &copy; 2025-2026 Bender_Dios</span>
+    <a href="https://github.com/emerytheec/Idiomas">GitHub</a>
+    <a href="https://ko-fi.com/bender_dios">Ko-fi</a>
+  </footer>
+</main>
+
+<script src="./assets/js/main.js"></script>
+</body>
+</html>

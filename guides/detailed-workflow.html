@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flujo Detallado - Idiomas</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="../assets/images/logo.svg">
+</head>
+<body>
+
+<header class="header">
+  <a href="../index.html" class="header-logo">
+    <img src="../assets/images/logo.svg" alt="Idiomas"><span>Idiomas</span>
+  </a>
+  <span class="header-version">v1.0.25</span>
+  <nav class="header-nav">
+    <a href="https://github.com/emerytheec/Idiomas">GitHub</a>
+    <a href="https://emerytheec.github.io/vpm-listing/">VPM</a>
+    <a href="https://ko-fi.com/bender_dios">Ko-fi</a>
+  </nav>
+  <button class="menu-toggle">&#9776;</button>
+</header>
+
+<div class="sidebar-overlay"></div>
+
+<aside class="sidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-title">Inicio</div>
+    <a href="../index.html" class="sidebar-link"><span class="dot dot-cyan"></span> Introduccion</a>
+    <a href="../getting-started.html" class="sidebar-link"><span class="dot dot-green"></span> Primeros Pasos</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Componentes</div>
+    <a href="../components/localization-manager.html" class="sidebar-link"><span class="dot dot-cyan"></span> LocalizationManager</a>
+    <a href="../components/canvas-localizer.html" class="sidebar-link"><span class="dot dot-green"></span> CanvasLocalizer</a>
+    <a href="../components/text-localizer.html" class="sidebar-link"><span class="dot dot-green"></span> TextLocalizer</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Guias</div>
+    <a href="./automatic-workflow.html" class="sidebar-link"><span class="dot dot-purple"></span> Flujo Automatico</a>
+    <a href="./detailed-workflow.html" class="sidebar-link"><span class="dot dot-purple"></span> Flujo Detallado</a>
+    <a href="./auto-translate.html" class="sidebar-link"><span class="dot dot-purple"></span> Auto-Traduccion</a>
+    <a href="./csv-export-import.html" class="sidebar-link"><span class="dot dot-purple"></span> Exportar / Importar CSV</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Referencia</div>
+    <a href="../api/runtime-api.html" class="sidebar-link"><span class="dot dot-blue"></span> API Runtime</a>
+    <a href="./best-practices.html" class="sidebar-link"><span class="dot dot-blue"></span> Buenas Practicas</a>
+    <a href="./troubleshooting.html" class="sidebar-link"><span class="dot dot-red"></span> Solucion de Problemas</a>
+  </div>
+</aside>
+
+<main class="main">
+
+  <span class="component-badge badge-guide">Guia</span>
+  <h1>Flujo Detallado</h1>
+  <p class="page-subtitle">Controla cada Canvas individualmente para un setup preciso</p>
+
+  <h2>Cuando usar el flujo detallado</h2>
+  <ul>
+    <li>Cuando tus Canvas tienen textos en <strong>idiomas base diferentes</strong> (ej: un Canvas en ingles y otro en japones)</li>
+    <li>Cuando quieres ser <strong>selectivo</strong> sobre que textos se traducen</li>
+    <li>Cuando necesitas <strong>ajustar claves</strong> de traduccion manualmente</li>
+    <li>Cuando trabajas con Canvas que tienen <strong>contenido mixto</strong> (textos + numeros + datos dinamicos)</li>
+    <li>Cuando usas <strong>assets de la tienda</strong> con textos en diferentes idiomas</li>
+  </ul>
+
+  <h2>Paso 1: Preparar el LocalizationManager</h2>
+  <p>
+    Igual que en el <a href="./automatic-workflow.html">flujo automatico</a>: arrastra el prefab <code>LocalizationManager.prefab</code> a la escena y configura el idioma fallback.
+  </p>
+
+  <h2>Paso 2: Escanear la escena</h2>
+  <p>
+    Pulsa <strong>"Escanear Escena"</strong> para detectar todos los Canvas. Aparece la lista de Canvas encontrados, pero <strong>no uses la Configuracion Rapida</strong> &mdash; en este flujo trabajaras Canvas por Canvas.
+  </p>
+
+  <h2>Paso 3: Añadir CanvasLocalizer individualmente</h2>
+  <p>
+    En vez de usar la Configuracion Rapida, haz clic en <strong>"Añadir CanvasLocalizer"</strong> en cada Canvas que quieras localizar. Esto te permite:
+  </p>
+  <ul>
+    <li>Elegir cuales Canvas localizar y cuales dejar sin traducir</li>
+    <li>Configurar cada Canvas con su propio idioma base</li>
+    <li>Tener control total sobre el proceso</li>
+  </ul>
+
+  <h2>Paso 4: Configurar cada Canvas</h2>
+  <p>Selecciona un Canvas y ve a su componente CanvasLocalizer:</p>
+
+  <ol class="steps">
+    <li><strong>Ajusta el Canvas ID</strong> si el generado automaticamente no te conviene. El ID se usa como prefijo en las claves de traduccion.</li>
+    <li><strong>Selecciona el idioma base</strong> especifico de ESTE Canvas. Puede ser diferente al de otros Canvas. Por ejemplo, un asset japones tendria <code>"ja"</code> como idioma base.</li>
+    <li><strong>Pulsa "Escanear Canvas"</strong> para detectar todos los textos hijos.</li>
+    <li><strong>Revisa cada texto</strong> en la tabla:
+      <ul>
+        <li>Desmarca los que no quieras traducir (numeros, simbolos, textos decorativos)</li>
+        <li>Ajusta las claves de traduccion si las generadas no son descriptivas</li>
+        <li>Verifica que no haya duplicados (marcados en amarillo)</li>
+      </ul>
+    </li>
+    <li><strong>Pulsa "Exportar al JSON y Aplicar"</strong> para guardar las claves y textos.</li>
+  </ol>
+
+  <h2>Paso 5: Repetir para cada Canvas</h2>
+  <p>
+    Repite el paso 4 para cada Canvas que quieras localizar. Cada Canvas puede tener:
+  </p>
+  <ul>
+    <li>Un <strong>idioma base diferente</strong> (ej: ingles para tu UI, japones para un asset)</li>
+    <li><strong>Textos excluidos</strong> diferentes</li>
+    <li><strong>Claves personalizadas</strong> que tengan sentido para tu proyecto</li>
+  </ul>
+
+  <h2>Paso 6: Traducir y probar</h2>
+  <p>
+    Igual que en el flujo automatico: usa la <a href="./auto-translate.html">Auto-Traduccion</a> o llena las traducciones manualmente, y prueba en Play Mode.
+  </p>
+
+  <div class="info-box info">
+    <span class="icon">&#9432;</span>
+    <span>El flujo detallado es mas trabajo pero te da <strong>control total</strong>. Es especialmente util para mundos complejos con Canvas de diferentes origenes (ej: assets de la tienda en japones + tu UI en español).</span>
+  </div>
+
+  <h2>Diferencias con el flujo automatico</h2>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Caracteristica</th><th>Automatico</th><th>Detallado</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Idioma base</td>
+          <td>Global para todos los Canvas</td>
+          <td>Individual por Canvas</td>
+        </tr>
+        <tr>
+          <td>Seleccion de textos</td>
+          <td>Automatica</td>
+          <td>Manual, texto por texto</td>
+        </tr>
+        <tr>
+          <td>Configuracion</td>
+          <td>Un clic</td>
+          <td>Canvas por Canvas</td>
+        </tr>
+        <tr>
+          <td>Claves</td>
+          <td>Generadas automaticamente</td>
+          <td>Editables una a una</td>
+        </tr>
+        <tr>
+          <td>Ideal para</td>
+          <td>Mundos simples con un idioma base</td>
+          <td>Mundos complejos o assets mixtos</td>
+        </tr>
+        <tr>
+          <td>Tiempo de setup</td>
+          <td>Rapido (minutos)</td>
+          <td>Variable (depende de la cantidad de Canvas)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="page-nav">
+    <a href="./automatic-workflow.html" class="prev">
+      <div class="nav-label">Anterior</div>
+      <div class="nav-title">Flujo Automatico</div>
+    </a>
+    <a href="./auto-translate.html" class="next">
+      <div class="nav-label">Siguiente</div>
+      <div class="nav-title">Auto-Traduccion</div>
+    </a>
+  </div>
+
+  <footer class="footer">
+    <span>Idiomas &copy; 2025-2026 Bender_Dios</span>
+    <a href="https://github.com/emerytheec/Idiomas">GitHub</a>
+    <a href="https://ko-fi.com/bender_dios">Ko-fi</a>
+  </footer>
+</main>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exportar / Importar CSV - Idiomas</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="../assets/images/logo.svg">
+</head>
+<body>
+
+<header class="header">
+  <a href="../index.html" class="header-logo">
+    <img src="../assets/images/logo.svg" alt="Idiomas"><span>Idiomas</span>
+  </a>
+  <span class="header-version">v1.0.25</span>
+  <nav class="header-nav">
+    <a href="https://github.com/emerytheec/Idiomas">GitHub</a>
+    <a href="https://emerytheec.github.io/vpm-listing/">VPM</a>
+    <a href="https://ko-fi.com/bender_dios">Ko-fi</a>
+  </nav>
+  <button class="menu-toggle">&#9776;</button>
+</header>
+
+<div class="sidebar-overlay"></div>
+
+<aside class="sidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-title">Inicio</div>
+    <a href="../index.html" class="sidebar-link"><span class="dot dot-cyan"></span> Introduccion</a>
+    <a href="../getting-started.html" class="sidebar-link"><span class="dot dot-green"></span> Primeros Pasos</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Componentes</div>
+    <a href="../components/localization-manager.html" class="sidebar-link"><span class="dot dot-cyan"></span> LocalizationManager</a>
+    <a href="../components/canvas-localizer.html" class="sidebar-link"><span class="dot dot-green"></span> CanvasLocalizer</a>
+    <a href="../components/text-localizer.html" class="sidebar-link"><span class="dot dot-green"></span> TextLocalizer</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Guias</div>
+    <a href="./automatic-workflow.html" class="sidebar-link"><span class="dot dot-purple"></span> Flujo Automatico</a>
+    <a href="./detailed-workflow.html" class="sidebar-link"><span class="dot dot-purple"></span> Flujo Detallado</a>
+    <a href="./auto-translate.html" class="sidebar-link"><span class="dot dot-purple"></span> Auto-Traduccion</a>
+    <a href="./csv-export-import.html" class="sidebar-link"><span class="dot dot-purple"></span> Exportar / Importar CSV</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Referencia</div>
+    <a href="../api/runtime-api.html" class="sidebar-link"><span class="dot dot-blue"></span> API Runtime</a>
+    <a href="./best-practices.html" class="sidebar-link"><span class="dot dot-blue"></span> Buenas Practicas</a>
+    <a href="./troubleshooting.html" class="sidebar-link"><span class="dot dot-red"></span> Solucion de Problemas</a>
+  </div>
+</aside>
+
+<main class="main">
+
+  <span class="component-badge badge-guide">Guia</span>
+  <h1>Exportar / Importar CSV</h1>
+  <p class="page-subtitle">Comparte traducciones con traductores humanos via Google Sheets o Excel</p>
+
+  <h2>Descripcion</h2>
+  <p>
+    Si necesitas traducciones de mayor calidad o en idiomas que las APIs automaticas no manejan bien, puedes exportar tu archivo JSON a CSV, compartirlo con traductores humanos, y reimportar las traducciones de vuelta.
+  </p>
+
+  <h2>Abrir la ventana</h2>
+  <p>Menu: <strong>Tools &gt; Idiomas &gt; Exportar-Importar CSV</strong></p>
+
+  <h2>Formato del CSV</h2>
+  <pre><code>key,en,es,ja,ko,zh-CN
+btn_start,Start,Inicio,スタート,시작,开始
+btn_close,Close,Cerrar,閉じる,닫기,关闭
+settings_title,Settings,Configuracion,設定,설정,设置</code></pre>
+
+  <ul>
+    <li><strong>Primera columna:</strong> clave de traduccion</li>
+    <li><strong>Columnas siguientes:</strong> un idioma por columna</li>
+    <li><strong>Primera fila:</strong> cabecera con los codigos de idioma</li>
+    <li><strong>Celdas vacias:</strong> traducciones pendientes</li>
+  </ul>
+
+  <h2>Exportar a CSV</h2>
+  <ol class="steps">
+    <li>Abre la ventana desde <strong>Tools &gt; Idiomas &gt; Exportar-Importar CSV</strong></li>
+    <li>Selecciona tu archivo JSON de traducciones</li>
+    <li>Pulsa <strong>"Exportar a CSV"</strong></li>
+    <li>Elige donde guardar el archivo <code>.csv</code></li>
+    <li>Abre el CSV en Google Sheets o Excel</li>
+    <li>Comparte con tus traductores</li>
+  </ol>
+
+  <div class="info-box tip">
+    <span class="icon">&#9432;</span>
+    <span><strong>Google Sheets</strong> es ideal para colaborar. Sube el CSV, comparte el enlace con tus traductores, y cuando terminen descarga el archivo actualizado como CSV.</span>
+  </div>
+
+  <h2>Importar desde CSV</h2>
+  <ol class="steps">
+    <li>Abre la ventana de Exportar-Importar CSV</li>
+    <li>Selecciona tu archivo JSON de destino</li>
+    <li>Pulsa <strong>"Importar desde CSV"</strong></li>
+    <li>Selecciona el archivo <code>.csv</code> actualizado</li>
+    <li>Las traducciones nuevas se fusionan con las existentes</li>
+  </ol>
+
+  <div class="info-box warning">
+    <span class="icon">&#9888;</span>
+    <span>La importacion <strong>NO sobreescribe</strong> traducciones existentes. Solo añade traducciones nuevas (celdas que estaban vacias). Si quieres reemplazar una traduccion existente, editala directamente en el JSON.</span>
+  </div>
+
+  <h2>Consejos para traductores</h2>
+  <p>Si compartes el CSV con traductores, indicales estas reglas:</p>
+  <ul>
+    <li><strong>No modificar</strong> la primera fila (cabecera de idiomas)</li>
+    <li><strong>No modificar</strong> la primera columna (claves de traduccion)</li>
+    <li>Dejar <strong>vacias</strong> las celdas que no quieran traducir</li>
+    <li>Respetar las etiquetas de rich text (<code>&lt;color&gt;</code>, <code>&lt;b&gt;</code>, etc.)</li>
+    <li>Respetar los placeholders <code>{0}</code>, <code>{1}</code>, <code>{2}</code> &mdash; son variables dinamicas que se rellenan en el juego</li>
+    <li>Tener en cuenta la <strong>longitud del texto</strong> &mdash; algunos idiomas necesitan mas espacio que otros</li>
+  </ul>
+
+  <h2>Flujo de trabajo colaborativo</h2>
+  <ol class="steps">
+    <li><strong>Tu:</strong> Exportas el JSON a CSV</li>
+    <li><strong>Tu:</strong> Subes el CSV a Google Sheets y compartes el enlace</li>
+    <li><strong>Traductores:</strong> Rellenan las celdas vacias con las traducciones</li>
+    <li><strong>Tu:</strong> Descargas el Sheets como CSV</li>
+    <li><strong>Tu:</strong> Importas el CSV de vuelta al JSON</li>
+    <li><strong>Tu:</strong> Verificas en Play Mode que todo se ve correctamente</li>
+  </ol>
+
+  <div class="page-nav">
+    <a href="./auto-translate.html" class="prev">
+      <div class="nav-label">Anterior</div>
+      <div class="nav-title">Auto-Traduccion</div>
+    </a>
+    <a href="./best-practices.html" class="next">
+      <div class="nav-label">Siguiente</div>
+      <div class="nav-title">Buenas Practicas</div>
+    </a>
+  </div>
+
+  <footer class="footer">
+    <span>Idiomas &copy; 2025-2026 Bender_Dios</span>
+    <a href="https://github.com/emerytheec/Idiomas">GitHub</a>
+    <a href="https://ko-fi.com/bender_dios">Ko-fi</a>
+  </footer>
+</main>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

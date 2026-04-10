@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TextLocalizer - Idiomas</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="../assets/images/logo.svg">
+</head>
+<body>
+
+<header class="header">
+  <a href="../index.html" class="header-logo">
+    <img src="../assets/images/logo.svg" alt="Idiomas"><span>Idiomas</span>
+  </a>
+  <span class="header-version">v1.0.25</span>
+  <nav class="header-nav">
+    <a href="https://github.com/emerytheec/Idiomas">GitHub</a>
+    <a href="https://emerytheec.github.io/vpm-listing/">VPM</a>
+    <a href="https://ko-fi.com/bender_dios">Ko-fi</a>
+  </nav>
+  <button class="menu-toggle">&#9776;</button>
+</header>
+
+<div class="sidebar-overlay"></div>
+
+<aside class="sidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-title">Inicio</div>
+    <a href="../index.html" class="sidebar-link"><span class="dot dot-cyan"></span> Introduccion</a>
+    <a href="../getting-started.html" class="sidebar-link"><span class="dot dot-green"></span> Primeros Pasos</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Componentes</div>
+    <a href="./localization-manager.html" class="sidebar-link"><span class="dot dot-cyan"></span> LocalizationManager</a>
+    <a href="./canvas-localizer.html" class="sidebar-link"><span class="dot dot-green"></span> CanvasLocalizer</a>
+    <a href="./text-localizer.html" class="sidebar-link"><span class="dot dot-green"></span> TextLocalizer</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Guias</div>
+    <a href="../guides/automatic-workflow.html" class="sidebar-link"><span class="dot dot-purple"></span> Flujo Automatico</a>
+    <a href="../guides/detailed-workflow.html" class="sidebar-link"><span class="dot dot-purple"></span> Flujo Detallado</a>
+    <a href="../guides/auto-translate.html" class="sidebar-link"><span class="dot dot-purple"></span> Auto-Traduccion</a>
+    <a href="../guides/csv-export-import.html" class="sidebar-link"><span class="dot dot-purple"></span> Exportar / Importar CSV</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Referencia</div>
+    <a href="../api/runtime-api.html" class="sidebar-link"><span class="dot dot-blue"></span> API Runtime</a>
+    <a href="../guides/best-practices.html" class="sidebar-link"><span class="dot dot-blue"></span> Buenas Practicas</a>
+    <a href="../guides/troubleshooting.html" class="sidebar-link"><span class="dot dot-red"></span> Solucion de Problemas</a>
+  </div>
+</aside>
+
+<main class="main">
+
+  <span class="component-badge badge-runtime">Runtime</span>
+  <h1>TextLocalizer</h1>
+  <p class="page-subtitle">Localiza un texto individual con parametros dinamicos, rich text y pluralizacion</p>
+
+  <h2>Descripcion</h2>
+  <p>
+    <strong>TextLocalizer</strong> localiza un texto individual. A diferencia de <a href="./canvas-localizer.html">CanvasLocalizer</a> (que gestiona un Canvas completo), TextLocalizer te da control fino sobre un solo texto con funcionalidades avanzadas:
+  </p>
+  <ul>
+    <li>Parametros dinamicos: <code>{0}</code>, <code>{1}</code>, <code>{2}</code></li>
+    <li>Prefijos y sufijos personalizados</li>
+    <li>Formato rich text con <code>{t}</code></li>
+    <li>Cambio de clave en runtime</li>
+  </ul>
+  <p>
+    Ideal para textos que necesitan datos dinamicos como nombres de jugador, contadores, o mensajes que cambian segun el contexto.
+  </p>
+
+  <h2>Cuando usar TextLocalizer vs CanvasLocalizer</h2>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Caracteristica</th><th>CanvasLocalizer</th><th>TextLocalizer</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Tipo de textos</td>
+          <td>Estaticos (se traducen tal cual)</td>
+          <td>Dinamicos (con parametros, rich text)</td>
+        </tr>
+        <tr>
+          <td>Cantidad</td>
+          <td>Muchos textos en un Canvas</td>
+          <td>Un texto por componente</td>
+        </tr>
+        <tr>
+          <td>Setup</td>
+          <td>Rapido (escaneo automatico)</td>
+          <td>Manual (uno por uno)</td>
+        </tr>
+        <tr>
+          <td>Parametros</td>
+          <td>No</td>
+          <td>Si &mdash; <code>{0}</code>, <code>{1}</code>, <code>{2}</code></td>
+        </tr>
+        <tr>
+          <td>Rich text</td>
+          <td>No</td>
+          <td>Si &mdash; <code>{t}</code> placeholder</td>
+        </tr>
+        <tr>
+          <td>Clave dinamica</td>
+          <td>No</td>
+          <td>Si &mdash; <code>SetTranslationKey()</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="info-box tip">
+    <span class="icon">&#9432;</span>
+    <span>Puedes usar ambos en el mismo Canvas. CanvasLocalizer ignora automaticamente los textos que ya tienen un TextLocalizer.</span>
+  </div>
+
+  <h2>Configuracion</h2>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Propiedad</th><th>Tipo</th><th>Descripcion</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>manager</code></td>
+          <td>LocalizationManager</td>
+          <td>Referencia al manager. Se asigna automaticamente si hay un solo LocalizationManager en la escena.</td>
+        </tr>
+        <tr>
+          <td><code>translationKey</code></td>
+          <td>string</td>
+          <td>Clave de traduccion en el JSON (ej: <code>"btn_start"</code>, <code>"welcome_message"</code>).</td>
+        </tr>
+        <tr>
+          <td><code>prefix</code></td>
+          <td>string</td>
+          <td>Texto que se añade <strong>antes</strong> de la traduccion (ej: <code>"&gt;&gt; "</code>).</td>
+        </tr>
+        <tr>
+          <td><code>suffix</code></td>
+          <td>string</td>
+          <td>Texto que se añade <strong>despues</strong> de la traduccion (ej: <code>" &lt;&lt;"</code>).</td>
+        </tr>
+        <tr>
+          <td><code>richTextFormat</code></td>
+          <td>string</td>
+          <td>Formato rich text. Usa <code>{t}</code> para la traduccion (ej: <code>"&lt;b&gt;{t}&lt;/b&gt;"</code>).</td>
+        </tr>
+        <tr>
+          <td><code>uiText</code></td>
+          <td>Text</td>
+          <td>Componente Legacy Text. Se auto-detecta si existe en el GameObject.</td>
+        </tr>
+        <tr>
+          <td><code>tmpText</code></td>
+          <td>TextMeshProUGUI</td>
+          <td>Componente TMP. Se auto-detecta si existe en el GameObject.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Parametros dinamicos</h2>
+  <p>Puedes insertar datos dinamicos en las traducciones usando placeholders <code>{0}</code>, <code>{1}</code>, <code>{2}</code>:</p>
+
+  <h4>JSON:</h4>
+  <pre><code>{
+  "en": { "welcome": "Hello {0}, you have {1} messages" },
+  "es": { "welcome": "Hola {0}, tienes {1} mensajes" },
+  "ja": { "welcome": "こんにちは{0}、{1}件のメッセージがあります" }
+}</code></pre>
+
+  <h4>Codigo UdonSharp:</h4>
+  <pre><code>// Desde otro script UdonSharp:
+textLocalizer.SetParams2("Bender", "5");
+// Resultado en español: "Hola Bender, tienes 5 mensajes"
+// Resultado en japones: "こんにちはBender、5件のメッセージがあります"</code></pre>
+
+  <p>Metodos disponibles para parametros:</p>
+  <ul>
+    <li><code>SetParams(string p0)</code> &mdash; reemplaza <code>{0}</code></li>
+    <li><code>SetParams2(string p0, string p1)</code> &mdash; reemplaza <code>{0}</code> y <code>{1}</code></li>
+    <li><code>SetParams3(string p0, string p1, string p2)</code> &mdash; reemplaza <code>{0}</code>, <code>{1}</code> y <code>{2}</code></li>
+  </ul>
+
+  <div class="info-box warning">
+    <span class="icon">&#9888;</span>
+    <span>En UdonSharp no puedes usar <code>params</code> ni arrays de longitud variable como parametro de metodo. Por eso existen <code>SetParams</code>, <code>SetParams2</code> y <code>SetParams3</code> como metodos separados.</span>
+  </div>
+
+  <h2>Rich Text</h2>
+  <p>
+    Usa <code>richTextFormat</code> para envolver la traduccion en etiquetas de formato. El placeholder <code>{t}</code> representa la traduccion:
+  </p>
+
+  <pre><code>richTextFormat = "&lt;b&gt;&lt;color=#00FF00&gt;{t}&lt;/color&gt;&lt;/b&gt;"
+
+// Con key "btn_start" = "Iniciar":
+// Resultado: "&lt;b&gt;&lt;color=#00FF00&gt;Iniciar&lt;/color&gt;&lt;/b&gt;"</code></pre>
+
+  <div class="info-box tip">
+    <span class="icon">&#9432;</span>
+    <span>Usa siempre <code>{t}</code> como placeholder en richTextFormat. Tambien acepta <code>{0}</code>, pero <strong>solo</strong> si no tienes parametros dinamicos activos. <code>{t}</code> nunca entra en conflicto.</span>
+  </div>
+
+  <h2>Pluralizacion</h2>
+  <p>
+    El sistema soporta pluralizacion con variantes de clave. Usa <code>GetPluralValue()</code> desde el <a href="./localization-manager.html">LocalizationManager</a>:
+  </p>
+
+  <pre><code>// JSON:
+{
+  "en": {
+    "messages_zero": "No messages",
+    "messages_one": "{n} message",
+    "messages_other": "{n} messages"
+  },
+  "es": {
+    "messages_zero": "Sin mensajes",
+    "messages_one": "{n} mensaje",
+    "messages_other": "{n} mensajes"
+  }
+}
+
+// Codigo:
+string text = manager.GetPluralValue("messages", 0);  // "Sin mensajes"
+string text = manager.GetPluralValue("messages", 1);  // "1 mensaje"
+string text = manager.GetPluralValue("messages", 5);  // "5 mensajes"</code></pre>
+
+  <p>Variantes soportadas:</p>
+  <ul>
+    <li><code>{key}_zero</code> &mdash; cuando count es 0</li>
+    <li><code>{key}_one</code> &mdash; cuando count es 1</li>
+    <li><code>{key}_other</code> &mdash; para todos los demas valores</li>
+  </ul>
+
+  <h2>Metodos Publicos</h2>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Metodo</th><th>Retorno</th><th>Descripcion</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>UpdateText()</code></td>
+          <td>void</td>
+          <td>Actualiza el texto con la traduccion actual. Llamado automaticamente por el manager.</td>
+        </tr>
+        <tr>
+          <td><code>SetTranslationKey(string newKey)</code></td>
+          <td>void</td>
+          <td>Cambia la clave de traduccion en runtime y actualiza el texto inmediatamente.</td>
+        </tr>
+        <tr>
+          <td><code>SetParams(string p0)</code></td>
+          <td>void</td>
+          <td>Establece el parametro <code>{0}</code> y actualiza el texto.</td>
+        </tr>
+        <tr>
+          <td><code>SetParams2(string p0, string p1)</code></td>
+          <td>void</td>
+          <td>Establece <code>{0}</code> y <code>{1}</code> y actualiza el texto.</td>
+        </tr>
+        <tr>
+          <td><code>SetParams3(string p0, string p1, string p2)</code></td>
+          <td>void</td>
+          <td>Establece <code>{0}</code>, <code>{1}</code> y <code>{2}</code> y actualiza el texto.</td>
+        </tr>
+        <tr>
+          <td><code>GetTranslationKey()</code></td>
+          <td>string</td>
+          <td>Devuelve la clave de traduccion actual.</td>
+        </tr>
+        <tr>
+          <td><code>GetManager()</code></td>
+          <td>LocalizationManager</td>
+          <td>Devuelve la referencia al manager.</td>
+        </tr>
+        <tr>
+          <td><code>SetManager(LocalizationManager m)</code></td>
+          <td>void</td>
+          <td>Establece el manager manualmente.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Ejemplo completo</h2>
+  <p>Imagina que quieres un texto que muestre "Jugadores: 5/20" y se traduzca:</p>
+
+  <ol class="steps">
+    <li>En el JSON, añade la clave con parametros:
+      <pre><code>"es": { "players_count": "Jugadores: {0}/{1}" }
+"en": { "players_count": "Players: {0}/{1}" }
+"ja": { "players_count": "プレイヤー: {0}/{1}" }</code></pre>
+    </li>
+    <li>Añade un componente <strong>TextLocalizer</strong> al texto, con <code>translationKey = "players_count"</code></li>
+    <li>Desde tu script UdonSharp, actualiza los parametros:
+      <pre><code>textLocalizer.SetParams2(
+    currentPlayers.ToString(),
+    maxPlayers.ToString()
+);</code></pre>
+    </li>
+    <li>Resultado segun idioma:
+      <ul>
+        <li>Español: <code>"Jugadores: 5/20"</code></li>
+        <li>English: <code>"Players: 5/20"</code></li>
+        <li>Japanese: <code>"プレイヤー: 5/20"</code></li>
+      </ul>
+    </li>
+  </ol>
+
+  <div class="page-nav">
+    <a href="./canvas-localizer.html" class="prev">
+      <div class="nav-label">Anterior</div>
+      <div class="nav-title">CanvasLocalizer</div>
+    </a>
+    <a href="../guides/automatic-workflow.html" class="next">
+      <div class="nav-label">Siguiente</div>
+      <div class="nav-title">Flujo Automatico</div>
+    </a>
+  </div>
+
+  <footer class="footer">
+    <span>Idiomas &copy; 2025-2026 Bender_Dios</span>
+    <a href="https://github.com/emerytheec/Idiomas">GitHub</a>
+    <a href="https://ko-fi.com/bender_dios">Ko-fi</a>
+  </footer>
+</main>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

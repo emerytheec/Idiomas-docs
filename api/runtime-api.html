@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Runtime - Idiomas</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="../assets/images/logo.svg">
+</head>
+<body>
+
+<header class="header">
+  <a href="../index.html" class="header-logo">
+    <img src="../assets/images/logo.svg" alt="Idiomas"><span>Idiomas</span>
+  </a>
+  <span class="header-version">v1.0.25</span>
+  <nav class="header-nav">
+    <a href="https://github.com/emerytheec/Idiomas">GitHub</a>
+    <a href="https://emerytheec.github.io/vpm-listing/">VPM</a>
+    <a href="https://ko-fi.com/bender_dios">Ko-fi</a>
+  </nav>
+  <button class="menu-toggle">&#9776;</button>
+</header>
+
+<div class="sidebar-overlay"></div>
+
+<aside class="sidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-title">Inicio</div>
+    <a href="../index.html" class="sidebar-link"><span class="dot dot-cyan"></span> Introduccion</a>
+    <a href="../getting-started.html" class="sidebar-link"><span class="dot dot-green"></span> Primeros Pasos</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Componentes</div>
+    <a href="../components/localization-manager.html" class="sidebar-link"><span class="dot dot-cyan"></span> LocalizationManager</a>
+    <a href="../components/canvas-localizer.html" class="sidebar-link"><span class="dot dot-green"></span> CanvasLocalizer</a>
+    <a href="../components/text-localizer.html" class="sidebar-link"><span class="dot dot-green"></span> TextLocalizer</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Guias</div>
+    <a href="../guides/automatic-workflow.html" class="sidebar-link"><span class="dot dot-purple"></span> Flujo Automatico</a>
+    <a href="../guides/detailed-workflow.html" class="sidebar-link"><span class="dot dot-purple"></span> Flujo Detallado</a>
+    <a href="../guides/auto-translate.html" class="sidebar-link"><span class="dot dot-purple"></span> Auto-Traduccion</a>
+    <a href="../guides/csv-export-import.html" class="sidebar-link"><span class="dot dot-purple"></span> Exportar / Importar CSV</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Referencia</div>
+    <a href="./runtime-api.html" class="sidebar-link"><span class="dot dot-blue"></span> API Runtime</a>
+    <a href="../guides/best-practices.html" class="sidebar-link"><span class="dot dot-blue"></span> Buenas Practicas</a>
+    <a href="../guides/troubleshooting.html" class="sidebar-link"><span class="dot dot-red"></span> Solucion de Problemas</a>
+  </div>
+</aside>
+
+<main class="main">
+
+  <span class="component-badge badge-runtime">Runtime</span>
+  <h1>API Runtime</h1>
+  <p class="page-subtitle">Referencia completa de la API publica para scripts UdonSharp</p>
+
+  <h2>Descripcion</h2>
+  <p>
+    Esta pagina documenta todos los metodos publicos disponibles para interactuar con el sistema de localizacion desde tus propios scripts UdonSharp. Todos los componentes estan en el namespace <code>BenderDios.Idiomas</code>.
+  </p>
+
+  <pre><code>using BenderDios.Idiomas;</code></pre>
+
+  <h2>LocalizationManager</h2>
+
+  <h3>Obtener traducciones</h3>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Metodo</th><th>Retorno</th><th>Descripcion</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>GetValue(string key)</code></td>
+          <td>string</td>
+          <td>Obtiene la traduccion de una clave. Cascada: idioma actual &rarr; fallback &rarr; otros idiomas &rarr; <code>"[key]"</code>.</td>
+        </tr>
+        <tr>
+          <td><code>GetPluralValue(string key, int count)</code></td>
+          <td>string</td>
+          <td>Traduccion con pluralizacion. Busca <code>{key}_zero</code> (count==0), <code>{key}_one</code> (count==1), <code>{key}_other</code>. Reemplaza <code>{n}</code> con count.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Gestion de idioma</h3>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Metodo</th><th>Retorno</th><th>Descripcion</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>SetLanguage(string lang)</code></td>
+          <td>void</td>
+          <td>Cambia el idioma activo. Notifica a todos los localizadores y listeners.</td>
+        </tr>
+        <tr>
+          <td><code>GetCurrentLanguage()</code></td>
+          <td>string</td>
+          <td>Devuelve el codigo del idioma activo (ej: <code>"es"</code>, <code>"ja"</code>).</td>
+        </tr>
+        <tr>
+          <td><code>GetAvailableLanguages()</code></td>
+          <td>string[]</td>
+          <td>Array con todos los codigos de idioma del JSON.</td>
+        </tr>
+        <tr>
+          <td><code>GetLanguageCount()</code></td>
+          <td>int</td>
+          <td>Numero de idiomas disponibles.</td>
+        </tr>
+        <tr>
+          <td><code>HasLanguage(string code)</code></td>
+          <td>bool</td>
+          <td><code>true</code> si el idioma existe en el JSON.</td>
+        </tr>
+        <tr>
+          <td><code>IsReady()</code></td>
+          <td>bool</td>
+          <td><code>true</code> si el manager esta inicializado y listo.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Registro de componentes</h3>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Metodo</th><th>Retorno</th><th>Descripcion</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>RegisterListener(UdonSharpBehaviour)</code></td>
+          <td>void</td>
+          <td>Registra un script para recibir <code>_OnLanguageChanged</code>.</td>
+        </tr>
+        <tr>
+          <td><code>RegisterLocalizer(TextLocalizer)</code></td>
+          <td>void</td>
+          <td>Registra un TextLocalizer en runtime.</td>
+        </tr>
+        <tr>
+          <td><code>RegisterCanvasLocalizer(CanvasLocalizer)</code></td>
+          <td>void</td>
+          <td>Registra un CanvasLocalizer en runtime.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Metodos sin parametros (para SendCustomEvent)</h3>
+  <p>
+    Estos metodos existen porque <code>SendCustomEvent</code> de VRChat no soporta parametros. Ideales para conectar botones de UI.
+  </p>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Metodo</th><th>Idioma</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>SetLanguageAuto()</code></td><td>Deteccion automatica</td></tr>
+        <tr><td><code>SetLanguageEnglish()</code></td><td>en &mdash; English</td></tr>
+        <tr><td><code>SetLanguageSpanish()</code></td><td>es &mdash; Español</td></tr>
+        <tr><td><code>SetLanguageJapanese()</code></td><td>ja &mdash; 日本語</td></tr>
+        <tr><td><code>SetLanguageKorean()</code></td><td>ko &mdash; 한국어</td></tr>
+        <tr><td><code>SetLanguageChineseSimplified()</code></td><td>zh-CN &mdash; 中文 (简体)</td></tr>
+        <tr><td><code>SetLanguageChineseTraditional()</code></td><td>zh-TW &mdash; 中文 (繁體)</td></tr>
+        <tr><td><code>SetLanguageRussian()</code></td><td>ru &mdash; Русский</td></tr>
+        <tr><td><code>SetLanguagePortuguese()</code></td><td>pt-BR &mdash; Português</td></tr>
+        <tr><td><code>SetLanguageFrench()</code></td><td>fr &mdash; Français</td></tr>
+        <tr><td><code>SetLanguageGerman()</code></td><td>de &mdash; Deutsch</td></tr>
+        <tr><td><code>SetLanguageCatalan()</code></td><td>ca &mdash; Català</td></tr>
+        <tr><td><code>OnLanguageDropdownChanged()</code></td><td>Callback del dropdown TMP</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>TextLocalizer</h2>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Metodo</th><th>Retorno</th><th>Descripcion</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>UpdateText()</code></td>
+          <td>void</td>
+          <td>Actualiza el texto con la traduccion actual. Se llama automaticamente.</td>
+        </tr>
+        <tr>
+          <td><code>SetTranslationKey(string newKey)</code></td>
+          <td>void</td>
+          <td>Cambia la clave de traduccion y actualiza el texto.</td>
+        </tr>
+        <tr>
+          <td><code>SetParams(string p0)</code></td>
+          <td>void</td>
+          <td>Establece <code>{0}</code> y actualiza.</td>
+        </tr>
+        <tr>
+          <td><code>SetParams2(string p0, string p1)</code></td>
+          <td>void</td>
+          <td>Establece <code>{0}</code> y <code>{1}</code> y actualiza.</td>
+        </tr>
+        <tr>
+          <td><code>SetParams3(string p0, string p1, string p2)</code></td>
+          <td>void</td>
+          <td>Establece <code>{0}</code>, <code>{1}</code> y <code>{2}</code> y actualiza.</td>
+        </tr>
+        <tr>
+          <td><code>GetTranslationKey()</code></td>
+          <td>string</td>
+          <td>Devuelve la clave actual.</td>
+        </tr>
+        <tr>
+          <td><code>GetManager()</code></td>
+          <td>LocalizationManager</td>
+          <td>Devuelve el manager.</td>
+        </tr>
+        <tr>
+          <td><code>SetManager(LocalizationManager m)</code></td>
+          <td>void</td>
+          <td>Establece el manager manualmente.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>CanvasLocalizer</h2>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Metodo</th><th>Retorno</th><th>Descripcion</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>UpdateAllTexts()</code></td>
+          <td>void</td>
+          <td>Actualiza todos los textos del Canvas. Se llama automaticamente.</td>
+        </tr>
+        <tr>
+          <td><code>GetCanvasId()</code></td>
+          <td>string</td>
+          <td>Devuelve el ID del Canvas.</td>
+        </tr>
+        <tr>
+          <td><code>GetBaseLanguage()</code></td>
+          <td>string</td>
+          <td>Devuelve el idioma base.</td>
+        </tr>
+        <tr>
+          <td><code>GetManager()</code></td>
+          <td>LocalizationManager</td>
+          <td>Devuelve el manager.</td>
+        </tr>
+        <tr>
+          <td><code>GetTextCount()</code></td>
+          <td>int</td>
+          <td>Numero de textos gestionados.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Evento _OnLanguageChanged</h2>
+  <p>
+    Los scripts registrados como listener reciben este evento via <code>SendCustomEvent</code> cada vez que cambia el idioma activo. No recibe parametros (limitacion de UdonSharp).
+  </p>
+
+  <h3>Ejemplo completo</h3>
+  <pre><code>using UdonSharp;
+using UnityEngine;
+using TMPro;
+using BenderDios.Idiomas;
+
+public class LanguageReactor : UdonSharpBehaviour
+{
+    [SerializeField] private LocalizationManager _manager;
+    [SerializeField] private TextMeshProUGUI _customText;
+
+    void Start()
+    {
+        // Registrarse como listener
+        _manager.RegisterListener(this);
+        UpdateCustomText();
+    }
+
+    // Este metodo se llama automaticamente al cambiar idioma
+    public void _OnLanguageChanged()
+    {
+        UpdateCustomText();
+    }
+
+    private void UpdateCustomText()
+    {
+        string lang = _manager.GetCurrentLanguage();
+        string welcome = _manager.GetValue("custom_welcome");
+        _customText.text = welcome;
+    }
+}</code></pre>
+
+  <h2>Formato del JSON</h2>
+  <pre><code>{
+  "en": {
+    "key1": "English text",
+    "key2": "Text with {0} parameter",
+    "messages_zero": "No messages",
+    "messages_one": "{n} message",
+    "messages_other": "{n} messages"
+  },
+  "es": {
+    "key1": "Texto en español",
+    "key2": "Texto con parametro {0}",
+    "messages_zero": "Sin mensajes",
+    "messages_one": "{n} mensaje",
+    "messages_other": "{n} mensajes"
+  }
+}</code></pre>
+
+  <h3>Funcionalidades especiales en claves</h3>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Funcionalidad</th><th>Sintaxis</th><th>Descripcion</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Parametros</td>
+          <td><code>{0}</code>, <code>{1}</code>, <code>{2}</code></td>
+          <td>Reemplazados en runtime por <code>SetParams()</code></td>
+        </tr>
+        <tr>
+          <td>Pluralizacion</td>
+          <td><code>{key}_zero</code>, <code>{key}_one</code>, <code>{key}_other</code></td>
+          <td>Variantes segun cantidad</td>
+        </tr>
+        <tr>
+          <td>Contador plural</td>
+          <td><code>{n}</code></td>
+          <td>Reemplazado con el valor de count</td>
+        </tr>
+        <tr>
+          <td>Rich text</td>
+          <td><code>&lt;color&gt;</code>, <code>&lt;b&gt;</code>, <code>&lt;i&gt;</code>, <code>&lt;size&gt;</code></td>
+          <td>Preservados durante la traduccion automatica</td>
+        </tr>
+        <tr>
+          <td>Saltos de linea</td>
+          <td><code>\n</code></td>
+          <td>Escapados en JSON, renderizados en Unity</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="page-nav">
+    <a href="../guides/troubleshooting.html" class="prev">
+      <div class="nav-label">Anterior</div>
+      <div class="nav-title">Solucion de Problemas</div>
+    </a>
+  </div>
+
+  <footer class="footer">
+    <span>Idiomas &copy; 2025-2026 Bender_Dios</span>
+    <a href="https://github.com/emerytheec/Idiomas">GitHub</a>
+    <a href="https://ko-fi.com/bender_dios">Ko-fi</a>
+  </footer>
+</main>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

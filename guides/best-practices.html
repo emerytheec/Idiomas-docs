@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buenas Practicas - Idiomas</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="../assets/images/logo.svg">
+</head>
+<body>
+
+<header class="header">
+  <a href="../index.html" class="header-logo">
+    <img src="../assets/images/logo.svg" alt="Idiomas"><span>Idiomas</span>
+  </a>
+  <span class="header-version">v1.0.25</span>
+  <nav class="header-nav">
+    <a href="https://github.com/emerytheec/Idiomas">GitHub</a>
+    <a href="https://emerytheec.github.io/vpm-listing/">VPM</a>
+    <a href="https://ko-fi.com/bender_dios">Ko-fi</a>
+  </nav>
+  <button class="menu-toggle">&#9776;</button>
+</header>
+
+<div class="sidebar-overlay"></div>
+
+<aside class="sidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-title">Inicio</div>
+    <a href="../index.html" class="sidebar-link"><span class="dot dot-cyan"></span> Introduccion</a>
+    <a href="../getting-started.html" class="sidebar-link"><span class="dot dot-green"></span> Primeros Pasos</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Componentes</div>
+    <a href="../components/localization-manager.html" class="sidebar-link"><span class="dot dot-cyan"></span> LocalizationManager</a>
+    <a href="../components/canvas-localizer.html" class="sidebar-link"><span class="dot dot-green"></span> CanvasLocalizer</a>
+    <a href="../components/text-localizer.html" class="sidebar-link"><span class="dot dot-green"></span> TextLocalizer</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Guias</div>
+    <a href="./automatic-workflow.html" class="sidebar-link"><span class="dot dot-purple"></span> Flujo Automatico</a>
+    <a href="./detailed-workflow.html" class="sidebar-link"><span class="dot dot-purple"></span> Flujo Detallado</a>
+    <a href="./auto-translate.html" class="sidebar-link"><span class="dot dot-purple"></span> Auto-Traduccion</a>
+    <a href="./csv-export-import.html" class="sidebar-link"><span class="dot dot-purple"></span> Exportar / Importar CSV</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Referencia</div>
+    <a href="../api/runtime-api.html" class="sidebar-link"><span class="dot dot-blue"></span> API Runtime</a>
+    <a href="./best-practices.html" class="sidebar-link"><span class="dot dot-blue"></span> Buenas Practicas</a>
+    <a href="./troubleshooting.html" class="sidebar-link"><span class="dot dot-red"></span> Solucion de Problemas</a>
+  </div>
+</aside>
+
+<main class="main">
+
+  <span class="component-badge badge-guide">Guia</span>
+  <h1>Buenas Practicas</h1>
+  <p class="page-subtitle">Consejos y recomendaciones para una localizacion efectiva en VRChat</p>
+
+  <h2>TextMeshPro vs Legacy Text</h2>
+  <p>Siempre usa <strong>TextMeshPro (TMP)</strong> en vez de Legacy Text:</p>
+  <ul>
+    <li>TMP tiene mejor soporte para caracteres CJK (japones, coreano, chino)</li>
+    <li>TMP maneja mejor los saltos de linea y el overflow de texto</li>
+    <li>VRChat optimiza el renderizado de TMP</li>
+    <li>TMP soporta rich text nativo (<code>&lt;color&gt;</code>, <code>&lt;b&gt;</code>, <code>&lt;size&gt;</code>)</li>
+  </ul>
+
+  <div class="info-box warning">
+    <span class="icon">&#9888;</span>
+    <span>Legacy Text funciona con Idiomas, pero tiene limitaciones con caracteres CJK y rendimiento. Migra a TMP siempre que sea posible.</span>
+  </div>
+
+  <h2>Diseño de Canvas responsivo</h2>
+  <p>Algunos idiomas necesitan mucho mas espacio que otros. Diseña tu UI con esto en mente:</p>
+  <ul>
+    <li>Usa componentes de layout de Unity: <code>HorizontalLayoutGroup</code>, <code>VerticalLayoutGroup</code>, <code>ContentSizeFitter</code></li>
+    <li>Configura el overflow de TMP a <strong>"Ellipsis"</strong> o <strong>"Truncate"</strong> como seguridad</li>
+    <li>Prueba con los idiomas mas largos (aleman, ruso, portugues) para verificar que todo cabe</li>
+    <li>Evita textos con ancho fijo &mdash; usa anclas y layout flexible</li>
+  </ul>
+
+  <h3>Longitud relativa por idioma</h3>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Idioma</th><th>Longitud relativa vs ingles</th><th>Nota</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Aleman</td><td>+30%</td><td>Palabras compuestas muy largas</td></tr>
+        <tr><td>Ruso</td><td>+20%</td><td>Declinaciones añaden longitud</td></tr>
+        <tr><td>Portugues</td><td>+20%</td><td>Articulos y preposiciones</td></tr>
+        <tr><td>Frances</td><td>+15%</td><td>Articulos frecuentes</td></tr>
+        <tr><td>Español</td><td>+15%</td><td>Similar al frances</td></tr>
+        <tr><td>Japones</td><td>-30%</td><td>Menos caracteres pero mas anchos</td></tr>
+        <tr><td>Coreano</td><td>-20%</td><td>Silabas compactas</td></tr>
+        <tr><td>Chino</td><td>-50%</td><td>Caracteres muy compactos pero anchos</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Fuentes CJK en VRChat</h2>
+  <p>Esta seccion es <strong>muy importante</strong> para que los caracteres asiaticos se vean correctamente:</p>
+  <ul>
+    <li>VRChat incluye las fuentes <strong>Noto Sans CJK</strong> en su cliente</li>
+    <li><strong>NO necesitas</strong> incluir fuentes CJK en tu proyecto</li>
+    <li>En el editor de Unity, los caracteres CJK pueden verse como cuadrados &mdash; esto es <strong>normal</strong></li>
+    <li>En VRChat se renderizan correctamente en PC y Quest</li>
+  </ul>
+
+  <div class="info-box danger">
+    <span class="icon">&#9888;</span>
+    <span><strong>No pongas fuentes personalizadas</strong> en <code>TMP Settings &gt; Fallback Font Assets</code>. Si lo haces, VRChat no usara sus fuentes internas y los caracteres CJK <strong>NO se renderizaran</strong>. Deja la lista de fallback <strong>VACIA</strong>.</span>
+  </div>
+
+  <h2>Estructura del JSON</h2>
+  <p>Recomendaciones para organizar tu archivo de traducciones:</p>
+  <ul>
+    <li>Usa <strong>prefijos</strong> para organizar claves: <code>"settings_"</code>, <code>"menu_"</code>, <code>"hud_"</code></li>
+    <li>Manten las claves en <strong>ingles</strong> para universalidad (ej: <code>"btn_start"</code>, no <code>"btn_iniciar"</code>)</li>
+    <li>Puedes tener <strong>multiples archivos JSON</strong> para diferentes secciones de tu mundo</li>
+    <li>El JSON es <strong>editable manualmente</strong> con cualquier editor de texto</li>
+  </ul>
+
+  <pre><code>{
+  "en": {
+    "menu_play": "Play",
+    "menu_settings": "Settings",
+    "hud_score": "Score: {0}",
+    "hud_time": "Time: {0}:{1}"
+  },
+  "es": {
+    "menu_play": "Jugar",
+    "menu_settings": "Configuracion",
+    "hud_score": "Puntuacion: {0}",
+    "hud_time": "Tiempo: {0}:{1}"
+  }
+}</code></pre>
+
+  <h2>Rendimiento</h2>
+  <ul>
+    <li>El sistema usa <strong>cache</strong>: los diccionarios del idioma activo se cachean en memoria</li>
+    <li>Cambiar de idioma es instantaneo (<strong>&lt;1ms</strong>) porque recachea el diccionario completo</li>
+    <li><code>GetValue()</code> tiene costo <strong>O(1)</strong> gracias al cache</li>
+    <li>No hay allocations de GC durante las llamadas normales</li>
+    <li>100+ claves y 100+ TextLocalizers: <strong>sin problema</strong> de rendimiento</li>
+  </ul>
+
+  <h2>Listeners externos</h2>
+  <p>Si tienes scripts UdonSharp que necesitan reaccionar al cambio de idioma:</p>
+
+  <pre><code>public class MyScript : UdonSharpBehaviour
+{
+    [SerializeField] LocalizationManager _manager;
+
+    void Start()
+    {
+        _manager.RegisterListener(this);
+    }
+
+    public void _OnLanguageChanged()
+    {
+        // El idioma ha cambiado
+        string lang = _manager.GetCurrentLanguage();
+        // Actualiza lo que necesites...
+    }
+}</code></pre>
+
+  <div class="info-box info">
+    <span class="icon">&#9432;</span>
+    <span>Ver la <a href="../api/runtime-api.html">API Runtime</a> para la referencia completa de metodos disponibles.</span>
+  </div>
+
+  <h2>Multiples archivos JSON</h2>
+  <ul>
+    <li>Puedes asignar diferentes archivos JSON a diferentes LocalizationManagers</li>
+    <li>Util para mundos con secciones independientes</li>
+    <li>Cada JSON puede tener diferentes idiomas y claves</li>
+    <li>El LocalizationManager solo trabaja con el JSON que tiene asignado</li>
+  </ul>
+
+  <h2>Control de versiones</h2>
+  <ul>
+    <li>Incluye el JSON en tu sistema de control de versiones (Git)</li>
+    <li>El JSON es legible y se puede comparar facilmente con <code>git diff</code></li>
+    <li>Usa la exportacion CSV para colaborar con traductores sin acceso a Unity</li>
+  </ul>
+
+  <div class="page-nav">
+    <a href="./csv-export-import.html" class="prev">
+      <div class="nav-label">Anterior</div>
+      <div class="nav-title">Exportar / Importar CSV</div>
+    </a>
+    <a href="./troubleshooting.html" class="next">
+      <div class="nav-label">Siguiente</div>
+      <div class="nav-title">Solucion de Problemas</div>
+    </a>
+  </div>
+
+  <footer class="footer">
+    <span>Idiomas &copy; 2025-2026 Bender_Dios</span>
+    <a href="https://github.com/emerytheec/Idiomas">GitHub</a>
+    <a href="https://ko-fi.com/bender_dios">Ko-fi</a>
+  </footer>
+</main>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

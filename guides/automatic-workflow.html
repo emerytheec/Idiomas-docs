@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flujo Automatico - Idiomas</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="../assets/images/logo.svg">
+</head>
+<body>
+
+<header class="header">
+  <a href="../index.html" class="header-logo">
+    <img src="../assets/images/logo.svg" alt="Idiomas"><span>Idiomas</span>
+  </a>
+  <span class="header-version">v1.0.25</span>
+  <nav class="header-nav">
+    <a href="https://github.com/emerytheec/Idiomas">GitHub</a>
+    <a href="https://emerytheec.github.io/vpm-listing/">VPM</a>
+    <a href="https://ko-fi.com/bender_dios">Ko-fi</a>
+  </nav>
+  <button class="menu-toggle">&#9776;</button>
+</header>
+
+<div class="sidebar-overlay"></div>
+
+<aside class="sidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-title">Inicio</div>
+    <a href="../index.html" class="sidebar-link"><span class="dot dot-cyan"></span> Introduccion</a>
+    <a href="../getting-started.html" class="sidebar-link"><span class="dot dot-green"></span> Primeros Pasos</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Componentes</div>
+    <a href="../components/localization-manager.html" class="sidebar-link"><span class="dot dot-cyan"></span> LocalizationManager</a>
+    <a href="../components/canvas-localizer.html" class="sidebar-link"><span class="dot dot-green"></span> CanvasLocalizer</a>
+    <a href="../components/text-localizer.html" class="sidebar-link"><span class="dot dot-green"></span> TextLocalizer</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Guias</div>
+    <a href="./automatic-workflow.html" class="sidebar-link"><span class="dot dot-purple"></span> Flujo Automatico</a>
+    <a href="./detailed-workflow.html" class="sidebar-link"><span class="dot dot-purple"></span> Flujo Detallado</a>
+    <a href="./auto-translate.html" class="sidebar-link"><span class="dot dot-purple"></span> Auto-Traduccion</a>
+    <a href="./csv-export-import.html" class="sidebar-link"><span class="dot dot-purple"></span> Exportar / Importar CSV</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Referencia</div>
+    <a href="../api/runtime-api.html" class="sidebar-link"><span class="dot dot-blue"></span> API Runtime</a>
+    <a href="./best-practices.html" class="sidebar-link"><span class="dot dot-blue"></span> Buenas Practicas</a>
+    <a href="./troubleshooting.html" class="sidebar-link"><span class="dot dot-red"></span> Solucion de Problemas</a>
+  </div>
+</aside>
+
+<main class="main">
+
+  <span class="component-badge badge-guide">Guia</span>
+  <h1>Flujo Automatico</h1>
+  <p class="page-subtitle">Localiza todos tus Canvas con unos pocos clics usando la Configuracion Rapida</p>
+
+  <h2>Cuando usar el flujo automatico</h2>
+  <ul>
+    <li>Cuando casi todos tus Canvas estan escritos en el <strong>mismo idioma</strong></li>
+    <li>Cuando quieres que el sistema haga la mayor parte del trabajo</li>
+    <li>Cuando no necesitas controlar cada texto individualmente</li>
+    <li>Es el <strong>flujo recomendado</strong> para la mayoria de mundos</li>
+  </ul>
+
+  <h2>Paso 1: Colocar el prefab</h2>
+  <p>
+    Arrastra el prefab <code>LocalizationManager.prefab</code> a la escena de tu mundo. Lo encuentras en: <code>Packages/Idiomas/Prefabs/LocalizationManager.prefab</code>
+  </p>
+  <p>
+    El prefab incluye un Canvas con un dropdown de seleccion de idioma ya configurado. Si no necesitas el dropdown, puedes eliminar el Canvas hijo y dejar solo el componente LocalizationManager.
+  </p>
+
+  <h2>Paso 2: Configurar el inspector</h2>
+
+  <div class="screenshot-annotated">
+    <img src="../assets/images/screenshots/lm-inspector-basic.png" alt="Inspector LocalizationManager basico">
+    <span class="marker" style="top: 22%; left: 48%;">1</span>
+    <span class="marker" style="top: 30%; left: 48%;">2</span>
+    <span class="marker" style="top: 37%; left: 48%;">3</span>
+    <span class="marker" style="top: 46%; left: 35%;">4</span>
+    <span class="marker" style="top: 78%; left: 55%;">5</span>
+  </div>
+
+  <div class="annotation-list">
+    <span class="annotation-number">1</span>
+    <span class="annotation-text"><strong>Idioma del Editor</strong> &mdash; cambia el idioma de la interfaz del inspector. No afecta a las traducciones del juego, solo a los textos del editor.</span>
+    <span class="annotation-number">2</span>
+    <span class="annotation-text"><strong>Archivo de traduccion</strong> &mdash; aqui se asignara automaticamente el JSON con las traducciones. Al principio esta vacio; se creara con el primer escaneo.</span>
+    <span class="annotation-number">3</span>
+    <span class="annotation-text"><strong>Idioma Fallback</strong> &mdash; selecciona el idioma que se usara cuando no se pueda detectar el del jugador. Elige el idioma en el que estan escritos la mayoria de tus Canvas.</span>
+    <span class="annotation-number">4</span>
+    <span class="annotation-text"><strong>Escanear Escena</strong> &mdash; busca todos los Canvas de la escena. Este paso solo detecta, no modifica nada.</span>
+    <span class="annotation-number">5</span>
+    <span class="annotation-text"><strong>Estadisticas</strong> &mdash; informacion sobre el estado actual de la localizacion (idiomas, claves, Canvas).</span>
+  </div>
+
+  <div class="info-box tip">
+    <span class="icon">&#9432;</span>
+    <span>El idioma fallback es importante: es el idioma "de emergencia". Si un jugador tiene un idioma que no esta en tu archivo de traduccion, vera los textos en el idioma fallback.</span>
+  </div>
+
+  <h2>Paso 3: Escanear la escena</h2>
+  <p>
+    Al pulsar <strong>"Escanear Escena"</strong>, el sistema busca todos los Canvas en la escena y los muestra en una lista:
+  </p>
+
+  <div class="screenshot-annotated">
+    <img src="../assets/images/screenshots/lm-scan-results.png" alt="Resultados del escaneo de escena">
+    <span class="marker" style="top: 35%; left: 35%;">1</span>
+    <span class="marker" style="top: 45%; left: 75%;">2</span>
+    <span class="marker" style="top: 55%; left: 50%;">3</span>
+    <span class="marker" style="top: 65%; left: 50%;">4</span>
+    <span class="marker" style="top: 80%; left: 50%;">5</span>
+  </div>
+
+  <div class="annotation-list">
+    <span class="annotation-number">1</span>
+    <span class="annotation-text"><strong>Lista de Canvas encontrados</strong> &mdash; cada fila muestra un Canvas con su nombre y ruta en la jerarquia.</span>
+    <span class="annotation-number">2</span>
+    <span class="annotation-text"><strong>Idioma base global</strong> &mdash; selecciona el idioma en que estan escritos tus textos. Se aplicara a TODOS los Canvas en la Configuracion Rapida.</span>
+    <span class="annotation-number">3</span>
+    <span class="annotation-text"><strong>Configuracion Rapida: Localizar Todo</strong> &mdash; el boton principal que automatiza todo el proceso.</span>
+    <span class="annotation-number">4</span>
+    <span class="annotation-text"><strong>Añadir CanvasLocalizer individual</strong> &mdash; si prefieres, puedes localizar Canvas de forma individual.</span>
+    <span class="annotation-number">5</span>
+    <span class="annotation-text"><strong>Estadisticas de textos</strong> &mdash; muestra cuantos textos TMP y Legacy tiene cada Canvas.</span>
+  </div>
+
+  <h2>Paso 4: Configuracion Rapida</h2>
+  <p>
+    Este es el paso clave. Al pulsar <strong>"Configuracion Rapida: Localizar Todo"</strong>, el sistema ejecuta automaticamente:
+  </p>
+
+  <ol class="steps">
+    <li><strong>Añade un componente CanvasLocalizer</strong> a cada Canvas detectado en la escena</li>
+    <li><strong>Genera un ID unico</strong> para cada Canvas basado en su nombre en la jerarquia</li>
+    <li><strong>Escanea todos los textos hijos</strong> de cada Canvas (TextMeshProUGUI y Legacy Text)</li>
+    <li><strong>Evalua cuales necesitan traduccion</strong> &mdash; excluye automaticamente numeros puros (<code>"123"</code>, <code>"45.6"</code>), signos (<code>"-"</code>, <code>"/"</code>, <code>":"</code>), y textos vacios</li>
+    <li><strong>Genera claves de traduccion</strong> basadas en la jerarquia (ej: <code>"settings_panel_volume_label"</code>)</li>
+    <li><strong>Crea o actualiza el archivo JSON</strong> con todas las claves y el texto del idioma base seleccionado</li>
+    <li><strong>Registra todos los CanvasLocalizer</strong> con el LocalizationManager</li>
+  </ol>
+
+  <div class="info-box info">
+    <span class="icon">&#9432;</span>
+    <span>Si el archivo de traduccion no existia, se crea automaticamente en la carpeta <code>Idiomas_Data/</code> dentro de <code>Assets/</code>. Si ya existia, las claves nuevas se agregan sin borrar las existentes.</span>
+  </div>
+
+  <h2>Paso 5: Revisar resultados</h2>
+  <p>
+    Despues de la Configuracion Rapida, puedes seleccionar cualquier Canvas para ver su CanvasLocalizer y revisar los textos detectados:
+  </p>
+
+  <div class="screenshot-annotated">
+    <img src="../assets/images/screenshots/cl-scan-results.png" alt="Resultados del escaneo por Canvas">
+    <span class="marker" style="top: 11%; left: 55%;">1</span>
+    <span class="marker" style="top: 17%; left: 55%;">2</span>
+    <span class="marker" style="top: 30%; left: 30%;">3</span>
+    <span class="marker" style="top: 50%; left: 50%;">4</span>
+    <span class="marker" style="top: 82%; left: 50%;">5</span>
+  </div>
+
+  <div class="annotation-list">
+    <span class="annotation-number">1</span>
+    <span class="annotation-text"><strong>Canvas ID</strong> &mdash; identificador unico generado automaticamente.</span>
+    <span class="annotation-number">2</span>
+    <span class="annotation-text"><strong>Idioma base</strong> &mdash; el idioma que seleccionaste en la Configuracion Rapida.</span>
+    <span class="annotation-number">3</span>
+    <span class="annotation-text"><strong>Checkbox de inclusion</strong> &mdash; puedes desmarcar textos que no quieras traducir.</span>
+    <span class="annotation-number">4</span>
+    <span class="annotation-text"><strong>Tabla de textos</strong> &mdash; cada texto con su clave, contenido actual, ruta y estado.</span>
+    <span class="annotation-number">5</span>
+    <span class="annotation-text"><strong>Exportar al JSON y Aplicar</strong> &mdash; si haces cambios manuales, pulsa aqui para guardarlos.</span>
+  </div>
+
+  <div class="info-box tip">
+    <span class="icon">&#9432;</span>
+    <span>En la mayoria de casos, despues de la Configuracion Rapida no necesitas tocar nada aqui. Solo revisa si quieres excluir algun texto especifico o ajustar alguna clave.</span>
+  </div>
+
+  <h2>Paso 6: Traducir</h2>
+  <p>
+    Con las claves en el JSON, es momento de traducir. Ve a la seccion "Traduccion" del LocalizationManager o usa el menu <strong>Tools &gt; Idiomas &gt; Auto-Traducir</strong>.
+  </p>
+  <p>El proceso resumido:</p>
+  <ol class="steps">
+    <li>Pulsa <strong>"Auto-Traducir Idiomas Faltantes"</strong></li>
+    <li>Selecciona los idiomas que quieres traducir</li>
+    <li>Pulsa <strong>"Traducir X textos con MyMemory"</strong></li>
+    <li>Revisa las traducciones en la vista previa</li>
+    <li>Pulsa <strong>"Guardar al JSON"</strong></li>
+  </ol>
+  <p>Sigue la guia completa de <a href="./auto-translate.html">Auto-Traduccion</a> para el paso a paso detallado.</p>
+
+  <h2>Paso 7: Probar</h2>
+  <p>
+    Entra en <strong>Play Mode</strong> en Unity. El sistema detecta tu idioma automaticamente. Usa el dropdown del prefab para probar diferentes idiomas y verificar que todo se traduce correctamente.
+  </p>
+
+  <div class="info-box warning">
+    <span class="icon">&#9888;</span>
+    <span>Los caracteres japoneses, coreanos y chinos pueden verse como cuadrados (<code>□</code>) en el editor de Unity. Esto es <strong>normal</strong> &mdash; en VRChat se renderizan correctamente gracias a las fuentes Noto Sans incluidas en el cliente.</span>
+  </div>
+
+  <h2>Resultado</h2>
+  <p>Despues de estos 7 pasos, tu mundo tiene:</p>
+  <ul>
+    <li>Todos los Canvas localizados automaticamente</li>
+    <li>Un archivo JSON con traducciones en los idiomas que elegiste</li>
+    <li>Deteccion automatica del idioma del jugador</li>
+    <li>Un dropdown para que el jugador cambie idioma manualmente</li>
+    <li>Todo funcional tanto en el editor como en VRChat</li>
+  </ul>
+
+  <div class="page-nav">
+    <a href="../components/text-localizer.html" class="prev">
+      <div class="nav-label">Anterior</div>
+      <div class="nav-title">TextLocalizer</div>
+    </a>
+    <a href="./detailed-workflow.html" class="next">
+      <div class="nav-label">Siguiente</div>
+      <div class="nav-title">Flujo Detallado</div>
+    </a>
+  </div>
+
+  <footer class="footer">
+    <span>Idiomas &copy; 2025-2026 Bender_Dios</span>
+    <a href="https://github.com/emerytheec/Idiomas">GitHub</a>
+    <a href="https://ko-fi.com/bender_dios">Ko-fi</a>
+  </footer>
+</main>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
