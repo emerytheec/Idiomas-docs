@@ -45,9 +45,12 @@
   </div>
   <div class="sidebar-section">
     <div class="sidebar-title">Referencia</div>
-    <a href="../api/runtime-api.html" class="sidebar-link"><span class="dot dot-blue"></span> API Runtime</a>
     <a href="../guides/best-practices.html" class="sidebar-link"><span class="dot dot-blue"></span> Buenas Practicas</a>
     <a href="../guides/troubleshooting.html" class="sidebar-link"><span class="dot dot-red"></span> Solucion de Problemas</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Para programadores</div>
+    <a href="../api/runtime-api.html" class="sidebar-link"><span class="dot dot-blue"></span> API Runtime</a>
   </div>
 </aside>
 
@@ -55,174 +58,77 @@
 
   <span class="component-badge badge-runtime">Runtime</span>
   <h1>CanvasLocalizer</h1>
-  <p class="page-subtitle">Localiza todos los textos de un Canvas completo con un solo componente</p>
+  <p class="page-subtitle">El componente que se encarga de traducir todos los textos de un Canvas</p>
 
-  <h2>Descripcion</h2>
+  <h2>¿Que hace?</h2>
   <p>
-    <strong>CanvasLocalizer</strong> se añade a un Canvas para localizar todos sus textos hijos de una sola vez. En lugar de poner un localizador en cada texto individual, CanvasLocalizer escanea el Canvas completo, detecta todos los <code>TextMeshProUGUI</code> y <code>Text</code> (Legacy), y los traduce cuando cambia el idioma.
+    El <strong>CanvasLocalizer</strong> es el componente que se añade a cada Canvas de tu mundo que tenga textos para traducir. En lugar de tener que poner un localizador en cada texto individual, este componente escanea el Canvas entero, detecta todos los textos (tanto <strong>TextMeshPro</strong> como <strong>Legacy Text</strong>) y se ocupa de cambiarlos cuando el jugador cambia de idioma.
   </p>
   <p>
-    Trabaja junto a <a href="./localization-manager.html">LocalizationManager</a>: cuando el idioma cambia, el manager llama a <code>UpdateAllTexts()</code> en cada CanvasLocalizer, que a su vez actualiza todos los textos de su Canvas.
+    No necesitas añadirlo a mano: cuando usas el boton <strong>"Configuracion Rapida"</strong> del LocalizationManager, este componente se añade automaticamente a todos los Canvas de tu escena. Consulta el <a href="../guides/automatic-workflow.html">Flujo Automatico</a>.
   </p>
 
-  <h2>Interfaz del Inspector</h2>
+  <h2>El inspector del componente</h2>
+  <p>
+    Cuando seleccionas un Canvas que tiene un CanvasLocalizer, esto es lo que veras en el inspector:
+  </p>
 
   <div class="screenshot-container">
-    <img src="../assets/images/screenshots/cl-scan-results.png" alt="Inspector CanvasLocalizer">  </div>
+    <img src="../assets/images/screenshots/cl-scan-results.png" alt="Inspector CanvasLocalizer">
+  </div>
 
   <div class="annotation-list">
     <span class="annotation-number">1</span>
-    <span class="annotation-text"><strong>Canvas ID</strong> &mdash; identificador unico del Canvas, generado automaticamente del nombre del GameObject. Se usa como prefijo en las claves de traduccion.</span>
+    <span class="annotation-text"><strong>Canvas ID</strong> &mdash; un nombre interno unico que identifica este Canvas. Se rellena solo a partir del nombre del GameObject. Normalmente no tienes que tocarlo.</span>
     <span class="annotation-number">2</span>
-    <span class="annotation-text"><strong>Idioma base</strong> &mdash; el idioma en el que estan escritos los textos originales de este Canvas. Se usa para saber desde que idioma traducir.</span>
+    <span class="annotation-text"><strong>Idioma base</strong> &mdash; el idioma en el que estan escritos los textos originales de este Canvas. Si todo tu Canvas esta escrito en español, eliges Español aqui.</span>
     <span class="annotation-number">3</span>
-    <span class="annotation-text"><strong>Pestañas de navegacion</strong> &mdash; permite navegar entre los diferentes Canvas localizados de la escena.</span>
+    <span class="annotation-text"><strong>Pestañas de navegacion</strong> &mdash; si tienes varios Canvas localizados, puedes saltar entre ellos sin tener que ir a la jerarquia.</span>
     <span class="annotation-number">4</span>
-    <span class="annotation-text"><strong>Checkbox de inclusion</strong> &mdash; activa o desactiva textos individuales para la traduccion. Los textos desmarcados se ignoran.</span>
+    <span class="annotation-text"><strong>Checkbox de inclusion</strong> &mdash; cada texto detectado tiene una casilla. Desmarca los textos que NO quieras traducir (por ejemplo, un nombre propio o un logo escrito).</span>
     <span class="annotation-number">5</span>
-    <span class="annotation-text"><strong>Clave de traduccion</strong> &mdash; identificador unico para cada texto, generado desde la jerarquia del Canvas. Se puede editar manualmente.</span>
+    <span class="annotation-text"><strong>Clave de traduccion</strong> &mdash; el identificador del texto en el archivo JSON. Se genera solo, pero puedes editarlo si quieres uno mas claro.</span>
     <span class="annotation-number">6</span>
-    <span class="annotation-text"><strong>Texto actual</strong> &mdash; contenido actual del componente Text o TextMeshProUGUI.</span>
+    <span class="annotation-text"><strong>Texto actual</strong> &mdash; el contenido del texto tal y como esta ahora en tu Canvas.</span>
     <span class="annotation-number">7</span>
-    <span class="annotation-text"><strong>Ruta en jerarquia</strong> &mdash; la ubicacion del texto dentro del Canvas (ej: Panel/Header/Title).</span>
+    <span class="annotation-text"><strong>Ruta en jerarquia</strong> &mdash; donde esta el texto dentro de tu Canvas (ej: <code>Panel/Header/Title</code>). Util para ubicar visualmente cada texto.</span>
     <span class="annotation-number">8</span>
-    <span class="annotation-text"><strong>Estado</strong> &mdash; indica si la clave es <span class="btn-ref btn-green">nueva</span>, <span class="btn-ref btn-blue">ya existe en el JSON</span>, o <span class="btn-ref btn-yellow">duplicada</span>.</span>
+    <span class="annotation-text"><strong>Estado</strong> &mdash; indica si la clave es <span class="btn-ref btn-green">nueva</span>, si <span class="btn-ref btn-blue">ya existe en el JSON</span>, o si esta <span class="btn-ref btn-yellow">duplicada</span> (en cuyo caso debes editarla para que sea unica).</span>
     <span class="annotation-number">9</span>
-    <span class="annotation-text"><strong>Textos excluidos</strong> &mdash; textos marcados para exclusion (numeros, signos, textos que no necesitan traduccion).</span>
+    <span class="annotation-text"><strong>Textos excluidos</strong> &mdash; los textos que has marcado para no traducir aparecen aqui. Puedes recuperarlos en cualquier momento.</span>
     <span class="annotation-number">10</span>
-    <span class="annotation-text"><strong>Exportar al JSON y Aplicar</strong> &mdash; guarda las claves y textos al archivo JSON y configura los arrays internos del componente.</span>
+    <span class="annotation-text"><strong>Exportar al JSON y Aplicar</strong> &mdash; guarda los cambios en el archivo de traduccion. Hasta que pulses este boton, nada esta guardado.</span>
   </div>
 
-  <h2>Configuracion</h2>
-
-  <div class="table-wrapper">
-    <table>
-      <thead>
-        <tr><th>Propiedad</th><th>Tipo</th><th>Descripcion</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><code>canvasId</code></td>
-          <td>string</td>
-          <td>ID unico del Canvas. Se genera automaticamente del nombre (ej: <code>"SettingsCanvas"</code> &rarr; <code>"settingscanvas"</code>). Se usa como prefijo en las claves.</td>
-        </tr>
-        <tr>
-          <td><code>baseLanguage</code></td>
-          <td>string</td>
-          <td>Codigo del idioma original de los textos (ej: <code>"en"</code>, <code>"es"</code>).</td>
-        </tr>
-        <tr>
-          <td><code>manager</code></td>
-          <td>LocalizationManager</td>
-          <td>Referencia al manager. Se asigna automaticamente con la Configuracion Rapida.</td>
-        </tr>
-        <tr>
-          <td><code>tmpTexts</code></td>
-          <td>TextMeshProUGUI[]</td>
-          <td>Array de componentes TMP encontrados. Se llena al escanear y exportar.</td>
-        </tr>
-        <tr>
-          <td><code>tmpKeys</code></td>
-          <td>string[]</td>
-          <td>Array paralelo de claves para cada TMP. Misma posicion = mismo texto.</td>
-        </tr>
-        <tr>
-          <td><code>legacyTexts</code></td>
-          <td>Text[]</td>
-          <td>Array de componentes Legacy Text encontrados.</td>
-        </tr>
-        <tr>
-          <td><code>legacyKeys</code></td>
-          <td>string[]</td>
-          <td>Array paralelo de claves para cada Legacy Text.</td>
-        </tr>
-        <tr>
-          <td><code>_excludedObjects</code></td>
-          <td>GameObject[]</td>
-          <td>Objetos excluidos del escaneo. Se preservan entre escaneos sucesivos.</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h2>Como funciona el escaneo</h2>
-  <p>Al pulsar <strong>"Escanear Canvas"</strong>, el sistema ejecuta estos pasos:</p>
-
+  <h2>¿Que hace al escanear un Canvas?</h2>
+  <p>
+    Cuando pulsas <strong>"Escanear Canvas"</strong> (o cuando usas la Configuracion Rapida en el LocalizationManager), la herramienta hace tres cosas:
+  </p>
   <ol class="steps">
-    <li>Busca todos los componentes <code>TextMeshProUGUI</code> y <code>Text</code> en los hijos del Canvas</li>
-    <li>Excluye textos que ya estan gestionados por un <a href="./text-localizer.html">TextLocalizer</a> individual</li>
-    <li>Excluye textos marcados como excluidos en escaneos anteriores</li>
-    <li>Para cada texto, genera una clave basada en la jerarquia: <code>"Canvas/Panel/Button/Text"</code> &rarr; <code>"canvasid_panel_button_text"</code></li>
-    <li>Detecta duplicados (claves repetidas) y los marca en amarillo</li>
-    <li>Evalua automaticamente que textos necesitan traduccion &mdash; excluye numeros puros (<code>"123"</code>), signos (<code>"-"</code>, <code>"/"</code>), y textos vacios</li>
+    <li>Busca todos los textos del Canvas, tanto TextMeshPro como Legacy Text.</li>
+    <li>Ignora automaticamente los textos que son solo numeros o signos (<code>"123"</code>, <code>"%"</code>, <code>"-"</code>...) porque no tiene sentido traducirlos.</li>
+    <li>Genera una clave unica para cada texto traducible y los muestra en la tabla del inspector para que los revises.</li>
   </ol>
 
   <div class="info-box tip">
     <span class="icon">&#9432;</span>
-    <span>El escaneo no modifica nada hasta que pulses "Exportar al JSON y Aplicar". Puedes ajustar claves, incluir/excluir textos, y re-escanear las veces que quieras antes de guardar.</span>
+    <span>El escaneo no modifica nada hasta que pulses <strong>"Exportar al JSON y Aplicar"</strong>. Puedes ajustar claves, marcar textos como excluidos y volver a escanear las veces que quieras antes de guardar.</span>
   </div>
-
-  <h2>Generacion de claves</h2>
-  <p>Las claves de traduccion se generan automaticamente a partir de la jerarquia del Canvas:</p>
-
-  <ul>
-    <li>Se toma la ruta completa del texto: <code>Canvas &gt; Panel &gt; Header &gt; Title</code></li>
-    <li>Se convierte a minusculas y se reemplazan espacios por guion bajo</li>
-    <li>Se eliminan sufijos como <code>(Clone)</code>, numeros de instancia, etc.</li>
-    <li>Se antepone el <code>canvasId</code> como prefijo</li>
-    <li>Resultado: <code>"settings_panel_header_title"</code></li>
-  </ul>
 
   <div class="info-box warning">
     <span class="icon">&#9888;</span>
-    <span>Las claves deben ser unicas en todo el JSON. Si detectas claves duplicadas (marcadas en amarillo), edita el nombre manualmente antes de exportar.</span>
+    <span>Si modificas un texto en tu Canvas <strong>despues</strong> de haberlo escaneado, debes volver a pulsar "Escanear Canvas" para que la herramienta detecte el cambio. Si no, seguira mostrando el texto antiguo en el archivo de traduccion.</span>
   </div>
 
-  <h2>Metodos Publicos</h2>
-
-  <div class="table-wrapper">
-    <table>
-      <thead>
-        <tr><th>Metodo</th><th>Retorno</th><th>Descripcion</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><code>UpdateAllTexts()</code></td>
-          <td>void</td>
-          <td>Actualiza todos los textos del Canvas con las traducciones del idioma actual. Llamado automaticamente por el manager.</td>
-        </tr>
-        <tr>
-          <td><code>GetCanvasId()</code></td>
-          <td>string</td>
-          <td>Devuelve el ID del Canvas.</td>
-        </tr>
-        <tr>
-          <td><code>GetBaseLanguage()</code></td>
-          <td>string</td>
-          <td>Devuelve el codigo del idioma base.</td>
-        </tr>
-        <tr>
-          <td><code>GetManager()</code></td>
-          <td>LocalizationManager</td>
-          <td>Devuelve la referencia al LocalizationManager.</td>
-        </tr>
-        <tr>
-          <td><code>GetTextCount()</code></td>
-          <td>int</td>
-          <td>Devuelve el numero total de textos gestionados (TMP + Legacy).</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h2>Gizmo en escena</h2>
+  <h2>Marca visual en la vista de escena</h2>
   <p>
-    Cada CanvasLocalizer muestra un Gizmo en la vista de escena (Scene View) con el formato: <code>[Idiomas:canvasId] N textos</code>. Esto ayuda a identificar visualmente cuales Canvas estan localizados.
+    Cada Canvas con un CanvasLocalizer muestra una pequeña marca azul en la vista de escena (Scene View) que dice <code>[Idiomas:nombre] N textos</code>. Asi puedes ver de un vistazo cuales de tus Canvas ya estan localizados sin tener que abrir cada uno.
   </p>
-  <ul>
-    <li><strong>Color azul</strong> &mdash; cuando el Canvas esta seleccionado</li>
-    <li><strong>Color cian</strong> &mdash; cuando no esta seleccionado</li>
-  </ul>
+
+  <div class="info-box info">
+    <span class="icon">&#9432;</span>
+    <span>¿Quieres traducir solo un texto puntual con parametros dinamicos (por ejemplo, "Hola, {nombre del jugador}")? Para eso usa <a href="./text-localizer.html">TextLocalizer</a> en lugar de CanvasLocalizer.</span>
+  </div>
 
   <div class="page-nav">
     <a href="./localization-manager.html" class="prev">

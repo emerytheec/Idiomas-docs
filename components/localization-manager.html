@@ -45,9 +45,12 @@
   </div>
   <div class="sidebar-section">
     <div class="sidebar-title">Referencia</div>
-    <a href="../api/runtime-api.html" class="sidebar-link"><span class="dot dot-blue"></span> API Runtime</a>
     <a href="../guides/best-practices.html" class="sidebar-link"><span class="dot dot-blue"></span> Buenas Practicas</a>
     <a href="../guides/troubleshooting.html" class="sidebar-link"><span class="dot dot-red"></span> Solucion de Problemas</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Para programadores</div>
+    <a href="../api/runtime-api.html" class="sidebar-link"><span class="dot dot-blue"></span> API Runtime</a>
   </div>
 </aside>
 
@@ -55,275 +58,84 @@
 
   <span class="component-badge badge-runtime">Runtime</span>
   <h1>LocalizationManager</h1>
-  <p class="page-subtitle">Componente central que gestiona traducciones, deteccion de idioma y notificacion a localizadores</p>
+  <p class="page-subtitle">El componente central que gobierna la traduccion de tu mundo</p>
 
-  <h2>Descripcion</h2>
+  <h2>¿Que hace?</h2>
   <p>
-    <strong>LocalizationManager</strong> es el nucleo del sistema de localizacion. Solo necesitas <strong>uno por escena</strong>. Se encarga de:
+    El <strong>LocalizationManager</strong> es el cerebro del sistema. Solo necesitas <strong>uno por mundo</strong>, y es el componente con el que mas vas a interactuar como creador. Desde su inspector lanzas el escaneo de la escena, eliges los idiomas con los que vas a trabajar y disparas la auto-traduccion.
   </p>
-  <ul>
-    <li>Cargar y parsear el archivo JSON de traducciones</li>
-    <li>Detectar automaticamente el idioma del jugador</li>
-    <li>Cachear diccionarios para acceso rapido O(1)</li>
-    <li>Notificar a todos los <a href="./canvas-localizer.html">CanvasLocalizer</a> y <a href="./text-localizer.html">TextLocalizer</a> cuando cambia el idioma</li>
-    <li>Notificar a scripts externos via sistema de listeners</li>
-    <li>Gestionar el dropdown de seleccion de idioma</li>
-  </ul>
+  <p>
+    Una vez configurado, en runtime se encarga solo de detectar el idioma del jugador y de mantener todos los textos del mundo sincronizados con ese idioma.
+  </p>
 
-  <h2>Interfaz del Inspector</h2>
+  <h2>Como añadirlo a tu mundo</h2>
+  <p>
+    Arrastra el prefab <code>LocalizationManager.prefab</code> a la raiz de tu escena. Lo encuentras en:
+  </p>
+  <pre><code>Packages/com.benderdios.idiomas/Prefabs/LocalizationManager.prefab</code></pre>
+  <p>
+    El prefab ya viene con un Canvas hijo que contiene un dropdown de seleccion de idioma listo para que tus jugadores cambien el idioma en el mundo. Si no lo quieres, puedes ocultarlo o eliminarlo.
+  </p>
+
+  <h2>El inspector del componente</h2>
+  <p>
+    Cuando seleccionas el LocalizationManager en la jerarquia, esto es lo que veras en el inspector:
+  </p>
 
   <div class="screenshot-container">
-    <img src="../assets/images/screenshots/lm-inspector-basic.png" alt="Inspector LocalizationManager">  </div>
+    <img src="../assets/images/screenshots/lm-inspector-basic.png" alt="Inspector LocalizationManager">
+  </div>
 
   <div class="annotation-list">
     <span class="annotation-number">1</span>
-    <span class="annotation-text"><strong>Idioma del Editor</strong> &mdash; cambia el idioma de la interfaz del inspector. No afecta al juego, solo a como ves los botones y textos del editor. Disponible en 11 idiomas.</span>
+    <span class="annotation-text"><strong>Idioma del Editor</strong> &mdash; cambia el idioma con el que ves los botones y textos del propio inspector. No afecta para nada a tu mundo, es solo para tu comodidad. Disponible en 11 idiomas.</span>
     <span class="annotation-number">2</span>
-    <span class="annotation-text"><strong>Archivo de traduccion</strong> &mdash; referencia al archivo JSON con todas las traducciones. Se crea automaticamente con el primer escaneo.</span>
+    <span class="annotation-text"><strong>Archivo de traduccion</strong> &mdash; aqui apunta el archivo JSON donde se guardan todas las traducciones. Al principio esta vacio; se crea solo cuando haces el primer escaneo.</span>
     <span class="annotation-number">3</span>
-    <span class="annotation-text"><strong>Idioma Fallback</strong> &mdash; idioma por defecto cuando no se detecta el del jugador, o cuando una clave no existe en el idioma actual.</span>
+    <span class="annotation-text"><strong>Idioma Fallback</strong> &mdash; el idioma "de emergencia". Si un jugador entra a tu mundo con un idioma que no has traducido, vera todo en este idioma. Elige uno que tengas siempre completo.</span>
     <span class="annotation-number">4</span>
-    <span class="annotation-text"><strong>Escanear Escena</strong> &mdash; busca todos los Canvas en la escena y los muestra en una lista. Solo detecta, no modifica nada.</span>
+    <span class="annotation-text"><strong>Escanear Escena</strong> &mdash; busca todos los Canvas de tu mundo y te los muestra en una lista. Solo detecta, no modifica nada todavia.</span>
     <span class="annotation-number">5</span>
-    <span class="annotation-text"><strong>Buscar Canvas sin Localizer</strong> &mdash; filtra solo los Canvas que aun no tienen un componente CanvasLocalizer añadido.</span>
+    <span class="annotation-text"><strong>Buscar Canvas sin Localizer</strong> &mdash; filtra solo los Canvas que aun no estan configurados, util cuando ya has hecho un primer escaneo y añades Canvas nuevos despues.</span>
     <span class="annotation-number">6</span>
-    <span class="annotation-text"><strong>Estadisticas</strong> &mdash; muestra el numero de idiomas disponibles, claves de traduccion, Canvas localizados y listeners registrados.</span>
-  </div>
-
-  <h2>Configuracion Principal</h2>
-
-  <div class="table-wrapper">
-    <table>
-      <thead>
-        <tr><th>Propiedad</th><th>Tipo</th><th>Descripcion</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><code>translationFile</code></td>
-          <td>TextAsset</td>
-          <td>Archivo JSON con todas las traducciones. Se asigna automaticamente al usar la Configuracion Rapida.</td>
-        </tr>
-        <tr>
-          <td><code>fallbackLanguage</code></td>
-          <td>string</td>
-          <td>Codigo del idioma fallback (ej: <code>"en"</code>, <code>"es"</code>). Se usa cuando el idioma del jugador no esta disponible.</td>
-        </tr>
-        <tr>
-          <td><code>localizers</code></td>
-          <td>TextLocalizer[]</td>
-          <td>Array de TextLocalizer registrados. Se llena automaticamente al escanear.</td>
-        </tr>
-        <tr>
-          <td><code>canvasLocalizers</code></td>
-          <td>CanvasLocalizer[]</td>
-          <td>Array de CanvasLocalizer registrados. Se llena automaticamente al escanear.</td>
-        </tr>
-        <tr>
-          <td><code>_languageDropdown</code></td>
-          <td>TMP_Dropdown</td>
-          <td>Dropdown opcional para que el jugador cambie idioma manualmente en el mundo.</td>
-        </tr>
-        <tr>
-          <td><code>_dropdownLanguageCodes</code></td>
-          <td>string[]</td>
-          <td>Codigos de idioma que corresponden a cada opcion del dropdown (misma posicion).</td>
-        </tr>
-        <tr>
-          <td><code>_listeners</code></td>
-          <td>UdonSharpBehaviour[]</td>
-          <td>Scripts externos que reciben el evento <code>_OnLanguageChanged</code> cuando cambia el idioma.</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h2>Deteccion Automatica de Idioma</h2>
-  <p>
-    Al iniciar, el sistema detecta automaticamente el idioma del jugador usando una cascada de 4 niveles. Si un nivel falla, pasa al siguiente:
-  </p>
-
-  <h3>Nivel 1: API de VRChat</h3>
-  <p>
-    Usa <code>VRCPlayerApi.GetCurrentLanguage()</code> para obtener el idioma configurado por el jugador en VRChat. Es el metodo mas fiable y directo.
-  </p>
-
-  <h3>Nivel 2: Variantes de idioma</h3>
-  <p>
-    Si el codigo incluye variante regional (ej: <code>"es-CL"</code>), intenta con el codigo base (<code>"es"</code>). Esto permite detectar variantes que no estan explicitamente en el JSON.
-  </p>
-
-  <h3>Nivel 3: Zona horaria</h3>
-  <p>
-    Si no se detecta via API, mapea la zona horaria del sistema al idioma mas probable. Soporta <strong>200+ zonas horarias</strong> en ambos formatos (Windows y IANA):
-  </p>
-
-  <div class="table-wrapper">
-    <table>
-      <thead>
-        <tr><th>Zona horaria</th><th>Formato IANA</th><th>Idioma</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Tokyo Standard Time</td><td>Asia/Tokyo</td><td>ja (japones)</td></tr>
-        <tr><td>China Standard Time</td><td>Asia/Shanghai</td><td>zh-CN (chino simplificado)</td></tr>
-        <tr><td>Korea Standard Time</td><td>Asia/Seoul</td><td>ko (coreano)</td></tr>
-        <tr><td>Romance Standard Time</td><td>Europe/Madrid</td><td>es (español)</td></tr>
-        <tr><td>W. Europe Standard Time</td><td>Europe/Berlin</td><td>de (aleman)</td></tr>
-        <tr><td>Russian Standard Time</td><td>Europe/Moscow</td><td>ru (ruso)</td></tr>
-        <tr><td>E. South America Time</td><td>America/Sao_Paulo</td><td>pt-BR (portugues)</td></tr>
-        <tr><td>Romance Standard Time</td><td>Europe/Paris</td><td>fr (frances)</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="info-box info">
-    <span class="icon">&#9432;</span>
-    <span>En Quest, las zonas horarias usan formato IANA (<code>Asia/Tokyo</code>). En PC usan formato Windows (<code>Tokyo Standard Time</code>). El sistema soporta ambos formatos automaticamente.</span>
-  </div>
-
-  <h3>Nivel 4: Fallback</h3>
-  <p>
-    Si ninguno de los metodos anteriores funciona, usa el idioma fallback configurado en el inspector. Si ese idioma tampoco existe en el JSON, usa el primer idioma disponible.
-  </p>
-
-  <h2>Idiomas Soportados</h2>
-
-  <div class="table-wrapper">
-    <table>
-      <thead>
-        <tr><th>Codigo</th><th>Nombre nativo</th><th>Nombre latin</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><code>en</code></td><td>English</td><td>English</td></tr>
-        <tr><td><code>es</code></td><td>Español</td><td>Espanol</td></tr>
-        <tr><td><code>ja</code></td><td>日本語</td><td>Japanese</td></tr>
-        <tr><td><code>ko</code></td><td>한국어</td><td>Korean</td></tr>
-        <tr><td><code>zh-CN</code></td><td>中文 (简体)</td><td>Chinese Simplified</td></tr>
-        <tr><td><code>zh-TW</code></td><td>中文 (繁體)</td><td>Chinese Traditional</td></tr>
-        <tr><td><code>ru</code></td><td>Русский</td><td>Russian</td></tr>
-        <tr><td><code>pt-BR</code></td><td>Português</td><td>Portuguese</td></tr>
-        <tr><td><code>fr</code></td><td>Français</td><td>French</td></tr>
-        <tr><td><code>de</code></td><td>Deutsch</td><td>German</td></tr>
-        <tr><td><code>ca</code></td><td>Català</td><td>Catalan</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h2>Metodos Publicos</h2>
-
-  <div class="table-wrapper">
-    <table>
-      <thead>
-        <tr><th>Metodo</th><th>Retorno</th><th>Descripcion</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><code>GetValue(string key)</code></td>
-          <td>string</td>
-          <td>Obtiene la traduccion de una clave. Busca en: idioma actual &rarr; fallback &rarr; otros idiomas &rarr; devuelve <code>[key]</code>.</td>
-        </tr>
-        <tr>
-          <td><code>GetPluralValue(string key, int count)</code></td>
-          <td>string</td>
-          <td>Traduccion con pluralizacion. Busca <code>{key}_zero</code>, <code>{key}_one</code>, <code>{key}_other</code>. Reemplaza <code>{n}</code> con count.</td>
-        </tr>
-        <tr>
-          <td><code>SetLanguage(string lang)</code></td>
-          <td>void</td>
-          <td>Cambia el idioma activo. Recachea diccionarios y notifica a todos los localizadores y listeners.</td>
-        </tr>
-        <tr>
-          <td><code>GetCurrentLanguage()</code></td>
-          <td>string</td>
-          <td>Devuelve el codigo del idioma activo (ej: <code>"es"</code>).</td>
-        </tr>
-        <tr>
-          <td><code>GetAvailableLanguages()</code></td>
-          <td>string[]</td>
-          <td>Array con los codigos de todos los idiomas disponibles en el JSON.</td>
-        </tr>
-        <tr>
-          <td><code>HasLanguage(string code)</code></td>
-          <td>bool</td>
-          <td>Comprueba si un idioma existe en el JSON.</td>
-        </tr>
-        <tr>
-          <td><code>IsReady()</code></td>
-          <td>bool</td>
-          <td>Devuelve <code>true</code> si el manager esta inicializado y listo.</td>
-        </tr>
-        <tr>
-          <td><code>RegisterListener(UdonSharpBehaviour)</code></td>
-          <td>void</td>
-          <td>Registra un script externo para recibir <code>_OnLanguageChanged</code>.</td>
-        </tr>
-        <tr>
-          <td><code>RegisterLocalizer(TextLocalizer)</code></td>
-          <td>void</td>
-          <td>Registra un TextLocalizer en runtime.</td>
-        </tr>
-        <tr>
-          <td><code>RegisterCanvasLocalizer(CanvasLocalizer)</code></td>
-          <td>void</td>
-          <td>Registra un CanvasLocalizer en runtime.</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h2>Metodos de Cambio de Idioma (sin parametros)</h2>
-  <p>
-    Estos metodos existen porque <code>SendCustomEvent</code> de VRChat no soporta parametros. Son ideales para conectar botones de UI que cambien el idioma con un solo clic.
-  </p>
-
-  <div class="table-wrapper">
-    <table>
-      <thead>
-        <tr><th>Metodo</th><th>Idioma</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><code>SetLanguageAuto()</code></td><td>Deteccion automatica</td></tr>
-        <tr><td><code>SetLanguageEnglish()</code></td><td>en &mdash; English</td></tr>
-        <tr><td><code>SetLanguageSpanish()</code></td><td>es &mdash; Español</td></tr>
-        <tr><td><code>SetLanguageJapanese()</code></td><td>ja &mdash; 日本語</td></tr>
-        <tr><td><code>SetLanguageKorean()</code></td><td>ko &mdash; 한국어</td></tr>
-        <tr><td><code>SetLanguageChineseSimplified()</code></td><td>zh-CN &mdash; 中文 (简体)</td></tr>
-        <tr><td><code>SetLanguageChineseTraditional()</code></td><td>zh-TW &mdash; 中文 (繁體)</td></tr>
-        <tr><td><code>SetLanguageRussian()</code></td><td>ru &mdash; Русский</td></tr>
-        <tr><td><code>SetLanguagePortuguese()</code></td><td>pt-BR &mdash; Português</td></tr>
-        <tr><td><code>SetLanguageFrench()</code></td><td>fr &mdash; Français</td></tr>
-        <tr><td><code>SetLanguageGerman()</code></td><td>de &mdash; Deutsch</td></tr>
-        <tr><td><code>SetLanguageCatalan()</code></td><td>ca &mdash; Català</td></tr>
-      </tbody>
-    </table>
+    <span class="annotation-text"><strong>Estadisticas</strong> &mdash; un resumen rapido de cuantos idiomas tienes, cuantas claves de traduccion hay y cuantos Canvas estan localizados.</span>
   </div>
 
   <div class="info-box tip">
     <span class="icon">&#9432;</span>
-    <span>Usa estos metodos para conectar botones de UI via <code>SendCustomEvent</code> en Udon. Por ejemplo, un boton que llame <code>SetLanguageJapanese</code> en el LocalizationManager cambiara el idioma a japones.</span>
+    <span>El idioma fallback es importante. Si lo configuras bien (por ejemplo, ingles o el idioma en el que escribes tus textos originales), tu mundo siempre se vera correcto aunque añadas nuevos idiomas mas adelante sin haberlos terminado de traducir.</span>
   </div>
 
-  <h2>Configuracion del Dropdown</h2>
+  <h2>Deteccion automatica del idioma del jugador</h2>
   <p>
-    El prefab incluye un dropdown TMP para que el jugador cambie idioma manualmente. Tambien puedes configurar tu propio dropdown:
+    Cuando un jugador entra a tu mundo, el LocalizationManager intenta adivinar su idioma automaticamente. Lo intenta primero a traves de la configuracion de VRChat del jugador y, si eso falla, deduce el idioma probable a partir de la zona horaria del sistema (con soporte para mas de 200 zonas horarias). Si todo falla, usa el <strong>Idioma Fallback</strong> que hayas configurado.
+  </p>
+  <p>
+    Como creador de mundo no tienes que hacer nada: solo asegurate de elegir un idioma fallback razonable.
+  </p>
+
+  <h2>Anadir un dropdown para que el jugador cambie de idioma</h2>
+  <p>
+    El prefab ya incluye un dropdown listo para usar dentro de un Canvas hijo. Si quieres usar tu propio dropdown (por ejemplo, uno integrado en tu menu del mundo), arrastra el componente <strong>TMP_Dropdown</strong> al campo correspondiente del LocalizationManager. La herramienta lo configura sola: rellena las opciones con los idiomas activos y conecta el evento de cambio.
   </p>
 
   <div class="screenshot-container">
-    <img src="../assets/images/screenshots/cl-dropdown-setup.png" alt="Configuracion del Dropdown">  </div>
-
-  <div class="annotation-list">
-    <span class="annotation-number">1</span>
-    <span class="annotation-text"><strong>Referencia al Dropdown</strong> &mdash; arrastra aqui el componente TMP_Dropdown de seleccion de idioma.</span>
-    <span class="annotation-number">2</span>
-    <span class="annotation-text"><strong>Codigos de idioma</strong> &mdash; array que mapea cada opcion del dropdown a un codigo de idioma. La posicion 0 del dropdown corresponde a la posicion 0 del array.</span>
-    <span class="annotation-number">3</span>
-    <span class="annotation-text"><strong>CanvasLocalizer en jerarquia</strong> &mdash; el Canvas que contiene el dropdown tiene su propio CanvasLocalizer para localizar las opciones.</span>
-    <span class="annotation-number">4</span>
-    <span class="annotation-text"><strong>Exportar a JSON y Aplicar</strong> &mdash; guarda la configuracion del Canvas que contiene el dropdown.</span>
+    <img src="../assets/images/screenshots/cl-dropdown-setup.png" alt="Configuracion del Dropdown">
   </div>
 
   <div class="info-box warning">
     <span class="icon">&#9888;</span>
-    <span>El orden de los codigos de idioma debe coincidir <strong>exactamente</strong> con el orden de las opciones en el dropdown. Si la primera opcion es "English", el primer codigo debe ser <code>"en"</code>.</span>
+    <span>El dropdown debe estar en un Canvas <strong>World Space</strong> para que funcione correctamente en VRChat. Si lo creas, hazlo dentro del modo Prefab para evitar problemas de tamaño.</span>
+  </div>
+
+  <h2>Idiomas soportados</h2>
+  <p>
+    La herramienta soporta 11 idiomas: ingles, español, japones, coreano, chino simplificado, chino tradicional, ruso, portugues (Brasil), frances, aleman y catalan. Los caracteres CJK (chino, japones, coreano) se renderizan correctamente en VRChat gracias a las fuentes Noto Sans incluidas en el cliente.
+  </p>
+
+  <div class="info-box info">
+    <span class="icon">&#9432;</span>
+    <span>¿Eres programador y necesitas llamar al LocalizationManager desde tus propios scripts UdonSharp? Consulta la <a href="../api/runtime-api.html">API Runtime</a> en la seccion "Para programadores".</span>
   </div>
 
   <div class="page-nav">

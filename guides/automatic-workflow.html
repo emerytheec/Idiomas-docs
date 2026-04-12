@@ -45,9 +45,12 @@
   </div>
   <div class="sidebar-section">
     <div class="sidebar-title">Referencia</div>
-    <a href="../api/runtime-api.html" class="sidebar-link"><span class="dot dot-blue"></span> API Runtime</a>
     <a href="./best-practices.html" class="sidebar-link"><span class="dot dot-blue"></span> Buenas Practicas</a>
     <a href="./troubleshooting.html" class="sidebar-link"><span class="dot dot-red"></span> Solucion de Problemas</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-title">Para programadores</div>
+    <a href="../api/runtime-api.html" class="sidebar-link"><span class="dot dot-blue"></span> API Runtime</a>
   </div>
 </aside>
 
@@ -57,144 +60,144 @@
   <h1>Flujo Automatico</h1>
   <p class="page-subtitle">Localiza todos tus Canvas con unos pocos clics usando la Configuracion Rapida</p>
 
-  <h2>Cuando usar el flujo automatico</h2>
-  <ul>
-    <li>Cuando casi todos tus Canvas estan escritos en el <strong>mismo idioma</strong></li>
-    <li>Cuando quieres que el sistema haga la mayor parte del trabajo</li>
-    <li>Cuando no necesitas controlar cada texto individualmente</li>
-    <li>Es el <strong>flujo recomendado</strong> para la mayoria de mundos</li>
-  </ul>
-
-  <h2>Paso 1: Colocar el prefab</h2>
-  <p>
-    Arrastra el prefab <code>LocalizationManager.prefab</code> a la escena de tu mundo. Lo encuentras en: <code>Packages/Idiomas/Prefabs/LocalizationManager.prefab</code>
-  </p>
-  <p>
-    El prefab incluye un Canvas con un dropdown de seleccion de idioma ya configurado. Si no necesitas el dropdown, puedes eliminar el Canvas hijo y dejar solo el componente LocalizationManager.
-  </p>
-
-  <h2>Paso 2: Configurar el inspector</h2>
-
-  <div class="screenshot-container">
-    <img src="../assets/images/screenshots/lm-inspector-basic.png" alt="Inspector LocalizationManager basico">  </div>
-
-  <div class="annotation-list">
-    <span class="annotation-number">1</span>
-    <span class="annotation-text"><strong>Idioma del Editor</strong> &mdash; cambia el idioma de la interfaz del inspector. No afecta a las traducciones del juego, solo a los textos del editor.</span>
-    <span class="annotation-number">2</span>
-    <span class="annotation-text"><strong>Archivo de traduccion</strong> &mdash; aqui se asignara automaticamente el JSON con las traducciones. Al principio esta vacio; se creara con el primer escaneo.</span>
-    <span class="annotation-number">3</span>
-    <span class="annotation-text"><strong>Idioma Fallback</strong> &mdash; selecciona el idioma que se usara cuando no se pueda detectar el del jugador. Elige el idioma en el que estan escritos la mayoria de tus Canvas.</span>
-    <span class="annotation-number">4</span>
-    <span class="annotation-text"><strong>Escanear Escena</strong> &mdash; busca todos los Canvas de la escena. Este paso solo detecta, no modifica nada.</span>
-    <span class="annotation-number">5</span>
-    <span class="annotation-text"><strong>Estadisticas</strong> &mdash; informacion sobre el estado actual de la localizacion (idiomas, claves, Canvas).</span>
-  </div>
-
   <div class="info-box tip">
     <span class="icon">&#9432;</span>
-    <span>El idioma fallback es importante: es el idioma "de emergencia". Si un jugador tiene un idioma que no esta en tu archivo de traduccion, vera los textos en el idioma fallback.</span>
+    <span>Este flujo es el recomendado si todos los Canvas de tu mundo estan hechos originalmente en el <strong>mismo idioma</strong> (por ejemplo, todos en español). Si mezclas idiomas base distintos, usa el <a href="./detailed-workflow.html">Flujo Detallado</a>.</span>
   </div>
 
-  <h2>Paso 3: Escanear la escena</h2>
+  <h2>Paso 1: Coloca el LocalizationManager en tu escena</h2>
   <p>
-    Al pulsar <strong>"Escanear Escena"</strong>, el sistema busca todos los Canvas en la escena y los muestra en una lista:
+    Arrastra el prefab <code>LocalizationManager.prefab</code> a la raiz de tu escena. Lo encuentras en: <code>Packages/com.benderdios.idiomas/Prefabs/LocalizationManager.prefab</code>. Solo necesitas <strong>uno por mundo</strong>.
   </p>
 
   <div class="screenshot-container">
-    <img src="../assets/images/screenshots/lm-scan-results.png" alt="Resultados del escaneo de escena">  </div>
-
-  <div class="annotation-list">
-    <span class="annotation-number">1</span>
-    <span class="annotation-text"><strong>Lista de Canvas encontrados</strong> &mdash; cada fila muestra un Canvas con su nombre y ruta en la jerarquia.</span>
-    <span class="annotation-number">2</span>
-    <span class="annotation-text"><strong>Idioma base global</strong> &mdash; selecciona el idioma en que estan escritos tus textos. Se aplicara a TODOS los Canvas en la Configuracion Rapida.</span>
-    <span class="annotation-number">3</span>
-    <span class="annotation-text"><strong>Configuracion Rapida: Localizar Todo</strong> &mdash; el boton principal que automatiza todo el proceso.</span>
-    <span class="annotation-number">4</span>
-    <span class="annotation-text"><strong>Añadir CanvasLocalizer individual</strong> &mdash; si prefieres, puedes localizar Canvas de forma individual.</span>
-    <span class="annotation-number">5</span>
-    <span class="annotation-text"><strong>Estadisticas de textos</strong> &mdash; muestra cuantos textos TMP y Legacy tiene cada Canvas.</span>
+    <img src="../assets/images/screenshots/auto-workflow-01-prefab-escena.png" alt="Prefab LocalizationManager en la jerarquia">
   </div>
 
-  <h2>Paso 4: Configuracion Rapida</h2>
   <p>
-    Este es el paso clave. Al pulsar <strong>"Configuracion Rapida: Localizar Todo"</strong>, el sistema ejecuta automaticamente:
+    El prefab incluye un Canvas con un dropdown de seleccion de idioma ya configurado. Si no quieres el dropdown todavia, puedes ocultarlo y añadirlo mas adelante.
   </p>
 
-  <ol class="steps">
-    <li><strong>Añade un componente CanvasLocalizer</strong> a cada Canvas detectado en la escena</li>
-    <li><strong>Genera un ID unico</strong> para cada Canvas basado en su nombre en la jerarquia</li>
-    <li><strong>Escanea todos los textos hijos</strong> de cada Canvas (TextMeshProUGUI y Legacy Text)</li>
-    <li><strong>Evalua cuales necesitan traduccion</strong> &mdash; excluye automaticamente numeros puros (<code>"123"</code>, <code>"45.6"</code>), signos (<code>"-"</code>, <code>"/"</code>, <code>":"</code>), y textos vacios</li>
-    <li><strong>Genera claves de traduccion</strong> basadas en la jerarquia (ej: <code>"settings_panel_volume_label"</code>)</li>
-    <li><strong>Crea o actualiza el archivo JSON</strong> con todas las claves y el texto del idioma base seleccionado</li>
-    <li><strong>Registra todos los CanvasLocalizer</strong> con el LocalizationManager</li>
-  </ol>
+  <h2>Paso 2: Elige con que idiomas vas a trabajar</h2>
+  <p>
+    Selecciona el <strong>LocalizationManager</strong> en la jerarquia. En el inspector veras la lista de idiomas soportados. Marca los idiomas a los que quieres traducir tu mundo y elige el <strong>Idioma Fallback</strong> (el que se usara cuando un jugador tenga un idioma que no esta en tu archivo).
+  </p>
+
+  <div class="screenshot-container">
+    <img src="../assets/images/screenshots/auto-workflow-02-seleccion-idiomas.png" alt="Seleccion de idiomas e idioma fallback">
+  </div>
 
   <div class="info-box info">
     <span class="icon">&#9432;</span>
-    <span>Si el archivo de traduccion no existia, se crea automaticamente en la carpeta <code>Idiomas_Data/</code> dentro de <code>Assets/</code>. Si ya existia, las claves nuevas se agregan sin borrar las existentes.</span>
-  </div>
-
-  <h2>Paso 5: Revisar resultados</h2>
-  <p>
-    Despues de la Configuracion Rapida, puedes seleccionar cualquier Canvas para ver su CanvasLocalizer y revisar los textos detectados:
-  </p>
-
-  <div class="screenshot-container">
-    <img src="../assets/images/screenshots/cl-scan-results.png" alt="Resultados del escaneo por Canvas">  </div>
-
-  <div class="annotation-list">
-    <span class="annotation-number">1</span>
-    <span class="annotation-text"><strong>Canvas ID</strong> &mdash; identificador unico generado automaticamente.</span>
-    <span class="annotation-number">2</span>
-    <span class="annotation-text"><strong>Idioma base</strong> &mdash; el idioma que seleccionaste en la Configuracion Rapida.</span>
-    <span class="annotation-number">3</span>
-    <span class="annotation-text"><strong>Checkbox de inclusion</strong> &mdash; puedes desmarcar textos que no quieras traducir.</span>
-    <span class="annotation-number">4</span>
-    <span class="annotation-text"><strong>Tabla de textos</strong> &mdash; cada texto con su clave, contenido actual, ruta y estado.</span>
-    <span class="annotation-number">5</span>
-    <span class="annotation-text"><strong>Exportar al JSON y Aplicar</strong> &mdash; si haces cambios manuales, pulsa aqui para guardarlos.</span>
+    <span>Al principio el archivo de traduccion esta <strong>vacio</strong>. No te preocupes: se creara solo en el siguiente paso.</span>
   </div>
 
   <div class="info-box tip">
     <span class="icon">&#9432;</span>
-    <span>En la mayoria de casos, despues de la Configuracion Rapida no necesitas tocar nada aqui. Solo revisa si quieres excluir algun texto especifico o ajustar alguna clave.</span>
+    <span>Cuantos mas idiomas marques, mas tiempo tomara la auto-traduccion mas adelante. Puedes empezar con dos o tres y añadir mas despues.</span>
   </div>
 
-  <h2>Paso 6: Traducir</h2>
+  <h2>Paso 3: Escanea la escena</h2>
   <p>
-    Con las claves en el JSON, es momento de traducir. Ve a la seccion "Traduccion" del LocalizationManager o usa el menu <strong>Tools &gt; Idiomas &gt; Auto-Traducir</strong>.
+    Pulsa el boton <strong>"Escanear Escena"</strong>. La herramienta recorre tu mundo y te muestra una lista de todos los Canvas que contienen textos. <strong>Todavia no ha modificado nada</strong> &mdash; es solo una vista previa para que veas que va a tocar.
   </p>
-  <p>El proceso resumido:</p>
-  <ol class="steps">
-    <li>Pulsa <strong>"Auto-Traducir Idiomas Faltantes"</strong></li>
-    <li>Selecciona los idiomas que quieres traducir</li>
-    <li>Pulsa <strong>"Traducir X textos con MyMemory"</strong></li>
-    <li>Revisa las traducciones en la vista previa</li>
-    <li>Pulsa <strong>"Guardar al JSON"</strong></li>
-  </ol>
-  <p>Sigue la guia completa de <a href="./auto-translate.html">Auto-Traduccion</a> para el paso a paso detallado.</p>
 
-  <h2>Paso 7: Probar</h2>
+  <h2>Paso 4: Elige el idioma base comun y pulsa "Configuracion Rapida"</h2>
   <p>
-    Entra en <strong>Play Mode</strong> en Unity. El sistema detecta tu idioma automaticamente. Usa el dropdown del prefab para probar diferentes idiomas y verificar que todo se traduce correctamente.
+    Justo encima del boton hay un desplegable de <strong>Idioma base</strong>. Elige el idioma en el que actualmente estan escritos los textos de tus Canvas (ejemplo: si escribiste todo en español, elige Español).
   </p>
+
+  <div class="screenshot-container">
+    <img src="../assets/images/screenshots/auto-workflow-03-boton-configuracion-rapida.png" alt="Boton Configuracion Rapida">
+  </div>
+
+  <div class="info-box warning">
+    <span class="icon">&#9888;</span>
+    <span>Este idioma debe ser <strong>comun a todos los Canvas</strong> que vas a configurar de golpe. Si tienes un Canvas en ingles y otros en español, configuralos por separado usando el <a href="./detailed-workflow.html">Flujo Detallado</a>.</span>
+  </div>
+
+  <p>
+    Pulsa <strong>"Configuracion Rapida"</strong>. Con un solo clic la herramienta:
+  </p>
+  <ol class="steps">
+    <li>Añade un componente <strong>CanvasLocalizer</strong> a cada Canvas detectado.</li>
+    <li>Escanea los textos de cada Canvas de forma <strong>individual</strong>.</li>
+    <li>Ignora automaticamente los textos que son solo numeros, signos o simbolos (no tiene sentido traducir <code>"123"</code> o <code>"%"</code>).</li>
+    <li>Genera claves unicas para cada texto traducible.</li>
+    <li>Crea el archivo <code>Assets/Idiomas_Data/translation.json</code> y lo rellena con todas las claves en el idioma base.</li>
+  </ol>
+
+  <div class="screenshot-container">
+    <img src="../assets/images/screenshots/auto-workflow-04-resultado-escaneo.png" alt="Resultado del escaneo">
+  </div>
+
+  <div class="info-box tip">
+    <span class="icon">&#9432;</span>
+    <span>En la mayoria de casos, despues de este paso no necesitas tocar nada mas en cada Canvas. Solo revisa si quieres excluir algun texto especifico.</span>
+  </div>
+
+  <h2>Paso 5: Auto-traducir a los demas idiomas</h2>
+  <p>
+    Baja en el inspector hasta la seccion <strong>"Traduccion"</strong> y pulsa <strong>"Auto-Traducir Idiomas Faltantes"</strong>. Se abrira una ventana con el numero de textos que hay que traducir a cada idioma que marcaste.
+  </p>
+
+  <div class="screenshot-container">
+    <img src="../assets/images/screenshots/auto-workflow-05-ventana-autotraducir.png" alt="Ventana de auto-traduccion">
+  </div>
+
+  <p>La herramienta usa dos servicios gratuitos, en orden:</p>
+  <ul>
+    <li><strong>MyMemory</strong> (principal) &mdash; hasta 5.000 palabras al dia sin registro.</li>
+    <li><strong>Lingva</strong> (respaldo) &mdash; se usa automaticamente si MyMemory falla o se agota el limite diario.</li>
+  </ul>
+
+  <p>
+    Pulsa <strong>"Traducir X textos con MyMemory"</strong>. Veras el progreso de cada idioma mientras se traducen los textos.
+  </p>
+
+  <div class="screenshot-container">
+    <img src="../assets/images/screenshots/auto-workflow-06-traduccion-progreso.png" alt="Traduccion en progreso">
+  </div>
+
+  <h2>Paso 6: Revisar y guardar al JSON</h2>
+  <p>
+    Cuando termine, revisa las traducciones propuestas. Puedes editarlas directamente en la tabla antes de guardar (util si una traduccion automatica no te convence). Cuando estes contento, pulsa <strong>"Guardar al JSON"</strong>.
+  </p>
+
+  <div class="screenshot-container">
+    <img src="../assets/images/screenshots/auto-workflow-07-guardar-json.png" alt="Resultado final con boton Guardar al JSON">
+  </div>
+
+  <div class="info-box tip">
+    <span class="icon">&#9432;</span>
+    <span>Desde ese momento tu mundo ya esta traducido. Entra en <strong>Play Mode</strong> en Unity y veras los textos cambiar segun el idioma del jugador. Usa el dropdown del prefab para probar diferentes idiomas.</span>
+  </div>
 
   <div class="info-box warning">
     <span class="icon">&#9888;</span>
     <span>Los caracteres japoneses, coreanos y chinos pueden verse como cuadrados (<code>□</code>) en el editor de Unity. Esto es <strong>normal</strong> &mdash; en VRChat se renderizan correctamente gracias a las fuentes Noto Sans incluidas en el cliente.</span>
   </div>
 
+  <h2>Consejos importantes antes de publicar</h2>
+  <p>Antes de subir tu mundo a VRChat, ten en cuenta estos puntos para que se vea bien en todos los idiomas:</p>
+
+  <ol class="steps">
+    <li><strong>Usa TextMeshPro (TMP), no Legacy Text.</strong> La herramienta soporta los dos, pero TMP maneja mejor los acentos, los caracteres CJK y el rich text. Si tienes textos Legacy, considera convertirlos.</li>
+    <li><strong>Deja espacio extra en tus Canvas.</strong> El aleman puede ser un 40 % mas largo que el ingles, mientras que el japones suele ser mas corto. Diseña los cuadros con margen holgado y activa <em>Auto Size</em> en los TextMeshPro para que el texto se ajuste solo.</li>
+    <li><strong>Cuidado con las fuentes para idiomas CJK.</strong> Las fuentes latinas estandar no tienen caracteres chinos, japoneses ni coreanos. VRChat carga Noto Sans como respaldo, pero si usas una fuente propia, asegurate de añadir los atlas CJK o tus textos apareceran como cuadros <code>□□□</code>.</li>
+    <li><strong>Puedes editar el archivo JSON a mano.</strong> Se guarda en <code>Assets/Idiomas_Data/translation.json</code>. Si una traduccion automatica no te gusta, abrelo con cualquier editor de texto y cambiala directamente.</li>
+    <li><strong>Puedes tener varios archivos de traduccion.</strong> Util si quieres versiones distintas del mundo (eventos especiales) o separar textos de UI y subtitulos. Apunta el LocalizationManager al archivo que quieras cargar.</li>
+    <li><strong>Si modificas un texto en un Canvas despues de configurarlo</strong>, vuelve a escanear ese Canvas para que la herramienta detecte el cambio.</li>
+  </ol>
+
   <h2>Resultado</h2>
-  <p>Despues de estos 7 pasos, tu mundo tiene:</p>
+  <p>Despues de estos 6 pasos, tu mundo tiene:</p>
   <ul>
     <li>Todos los Canvas localizados automaticamente</li>
     <li>Un archivo JSON con traducciones en los idiomas que elegiste</li>
-    <li>Deteccion automatica del idioma del jugador</li>
+    <li>Deteccion automatica del idioma del jugador al entrar al mundo</li>
     <li>Un dropdown para que el jugador cambie idioma manualmente</li>
-    <li>Todo funcional tanto en el editor como en VRChat</li>
+    <li>Todo funcional tanto en el editor de Unity como en VRChat</li>
   </ul>
 
   <div class="page-nav">
